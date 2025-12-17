@@ -69,7 +69,6 @@
                     </p>
                     <div class="paper-links">
                         <a href="#" class="btn-text"><i class="fas fa-file-pdf"></i> Read PDF</a>
-                        <!-- Linked directly to the specific lab project -->
                         <a href="#" class="btn-text highlight" onclick="appNav.openProject('mpc')"><i class="fas fa-play"></i> Play Demo</a>
                     </div>
                 </div>
@@ -176,7 +175,7 @@
                 <div class="sim-wrapper glass-panel">
                     <div class="sim-controls">
                         <div class="control-group">
-                            <label>Controller Logic</label>
+                            <label style="color: #666; font-size: 0.8rem; text-transform: uppercase;">Controller Logic</label>
                             <div class="toggle-switch">
                                 <button onclick="robotSim.setMode('linear')" id="btn-linear" class="active">Linear (Standard)</button>
                                 <button onclick="robotSim.setMode('mpc')" id="btn-mpc">MPC (My Thesis)</button>
@@ -184,12 +183,12 @@
                         </div>
                         <div class="stats">
                             <div class="stat-box">
-                                <span class="label">Safety Integrity</span>
-                                <span id="score-val" class="value">100%</span>
+                                <span class="label" style="display: block; font-size: 0.8rem; color: #666;">Safety Integrity</span>
+                                <span id="score-val" class="value" style="font-family: 'Roboto Mono'; font-size: 1.2rem;">100%</span>
                             </div>
                             <div class="stat-box">
-                                <span class="label">State</span>
-                                <span id="safety-status" class="value safe">OPTIMAL</span>
+                                <span class="label" style="display: block; font-size: 0.8rem; color: #666;">State</span>
+                                <span id="safety-status" class="value safe" style="font-family: 'Roboto Mono'; font-size: 1.2rem; color: #00ff9d;">OPTIMAL</span>
                             </div>
                         </div>
                     </div>
@@ -208,7 +207,7 @@
             <!-- PROJECT: HADES -->
             <div id="project-hades" class="project-view" style="display: none;">
                 <button class="back-btn" onclick="appNav.closeProject()"><i class="fas fa-arrow-left"></i> Return to Lab</button>
-                <div class="glass-panel p-content">
+                <div class="p-content">
                     <h3>Hades: Bio-Inspired ROV</h3>
                     <div class="meta-tags">
                         <span>LIRMM (2021-2022)</span>
@@ -228,7 +227,7 @@
             <!-- PROJECT: ALYSSA -->
             <div id="project-alyssa" class="project-view" style="display: none;">
                 <button class="back-btn" onclick="appNav.closeProject()"><i class="fas fa-arrow-left"></i> Return to Lab</button>
-                <div class="glass-panel p-content">
+                <div class="p-content">
                     <h3>Project ALYSSA</h3>
                     <div class="meta-tags">
                         <span>Marine Robotics</span>
@@ -247,7 +246,7 @@
              <!-- PROJECT: HAPTICS -->
              <div id="project-haptics" class="project-view" style="display: none;">
                 <button class="back-btn" onclick="appNav.closeProject()"><i class="fas fa-arrow-left"></i> Return to Lab</button>
-                <div class="glass-panel p-content">
+                <div class="p-content">
                     <h3>Shared Control & Haptics</h3>
                     <div class="meta-tags">
                         <span>Pprime CNRS</span>
@@ -272,9 +271,9 @@
             </div>
             <div class="timeline-container">
                 
-                <!-- CURRENT -->
-                <div class="timeline-card glass-card">
-                    <div class="time-marker">Oct 2022 <br> Present</div>
+                <!-- CURRENT (Class: 'current') -->
+                <div class="timeline-card current">
+                    <div class="time-marker">Oct 2022 - Present</div>
                     <div class="card-body">
                         <h4>PhD Researcher in Robotics</h4>
                         <span class="org">INRIA / Univ. of Bordeaux</span>
@@ -285,13 +284,13 @@
                             <li>User Studies: +60% Safety, +50% Speed, -60% Workload.</li>
                             <li>Used Genetic Algorithms for PID/MPC tuning.</li>
                         </ul>
-                        <div class="tags"><span>C++</span><span>ROS2</span><span>MPC</span></div>
+                        <div class="stack-mini"><span>C++</span><span>ROS2</span><span>MPC</span></div>
                     </div>
                 </div>
 
                 <!-- 2022 INTERN -->
-                <div class="timeline-card glass-card">
-                    <div class="time-marker">Mar 2022 <br> Aug 2022</div>
+                <div class="timeline-card">
+                    <div class="time-marker">Mar 2022 - Aug 2022</div>
                     <div class="card-body">
                         <h4>HRI & Control Research Intern</h4>
                         <span class="org">Pprime - CNRS (Poitiers)</span>
@@ -301,13 +300,12 @@
                             <li>Haptic Teleoperation via Force Dimension Omega.7.</li>
                             <li>Intention recognition for assembly tasks.</li>
                         </ul>
-                        <div class="tags"><span>Haptics</span><span>Inverse Dynamics</span></div>
                     </div>
                 </div>
 
                 <!-- 2021 INTERN -->
-                <div class="timeline-card glass-card">
-                    <div class="time-marker">Sep 2021 <br> Mar 2022</div>
+                <div class="timeline-card">
+                    <div class="time-marker">Sep 2021 - Mar 2022</div>
                     <div class="card-body">
                         <h4>Robotics Research Intern</h4>
                         <span class="org">LIRMM (Montpellier)</span>
@@ -317,12 +315,11 @@
                             <li>CFD Analysis (ANSYS Fluent) confirming 4.5m/s speed.</li>
                             <li>Euler-Lagrange Kinematic modeling (MATLAB).</li>
                         </ul>
-                        <div class="tags"><span>Bio-Inspired</span><span>CFD</span></div>
                     </div>
                 </div>
 
                 <!-- EDUCATION MSC -->
-                <div class="timeline-card glass-card">
+                <div class="timeline-card">
                     <div class="time-marker">2022</div>
                     <div class="card-body">
                         <h4>MSc in Robotics</h4>
@@ -332,8 +329,8 @@
                 </div>
 
                 <!-- 2020 PROJECT -->
-                <div class="timeline-card glass-card">
-                    <div class="time-marker">Jun 2020 <br> May 2021</div>
+                <div class="timeline-card">
+                    <div class="time-marker">Jun 2020 - May 2021</div>
                     <div class="card-body">
                         <h4>Marine Robotics Project Engineer</h4>
                         <span class="org">Project ALYSSA (Beirut)</span>
@@ -343,26 +340,15 @@
                             <li>Control simulation in Simulink/SimMechanics.</li>
                             <li>FEA Analysis for pressure integrity.</li>
                         </ul>
-                        <div class="tags"><span>SolidWorks</span><span>FEA</span><span>Simulink</span></div>
                     </div>
                 </div>
 
                  <!-- EDUCATION BSC -->
-                 <div class="timeline-card glass-card">
+                 <div class="timeline-card">
                     <div class="time-marker">2021</div>
                     <div class="card-body">
                         <h4>BSc in Mechanical Engineering</h4>
                         <span class="org">Holy Spirit University of Kaslik</span>
-                    </div>
-                </div>
-                
-                <!-- FUTURE PLACEHOLDER -->
-                <div class="timeline-card glass-card placeholder">
-                    <div class="time-marker">Future</div>
-                    <div class="card-body">
-                        <h4>Available for R&D Positions</h4>
-                        <span class="org">Global</span>
-                        <p>Open to opportunities in Shared Control, Autonomous Systems, and HRI.</p>
                     </div>
                 </div>
 
@@ -371,7 +357,7 @@
 
         <!-- VIEW 5: CONTACT -->
         <section id="contact" class="view-section">
-            <div class="contact-box glass-card">
+            <div class="contact-box">
                 <h3>Initialize Connection</h3>
                 <div class="contact-links">
                     <a href="mailto:eliojabbour98@gmail.com" class="contact-item"><i class="fas fa-envelope"></i> eliojabbour98@gmail.com</a>
