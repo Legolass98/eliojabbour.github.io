@@ -64,14 +64,34 @@ const appNav = {
     },
 
     /**
-     * NEW: Sets the UI Theme by changing the body attribute.
+     * Sets the UI Theme by changing the body attribute.
      * @param {string} themeName - 'orbital', 'titanium', 'aurora', 'matrix', 'carbon'
      */
     setTheme: function(themeName) {
         document.body.setAttribute('data-theme', themeName);
         
-        // Trigger background particle update if needed
-        // (We dispatch a custom event so background.js can listen for it)
+        // Trigger background particle update
         window.dispatchEvent(new Event('themeChanged'));
+    },
+
+    /**
+     * Initialize event listeners for theme switcher
+     * This handles the click events in JS instead of HTML for robustness
+     */
+    initThemeSwitcher: function() {
+        const themeDots = document.querySelectorAll('.theme-dot');
+        themeDots.forEach(dot => {
+            dot.addEventListener('click', (e) => {
+                const theme = dot.getAttribute('data-theme');
+                if (theme) {
+                    this.setTheme(theme);
+                }
+            });
+        });
     }
 };
+
+// Initialize listeners when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    appNav.initThemeSwitcher();
+});

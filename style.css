@@ -94,6 +94,7 @@ body {
 
 /* 1. TOP NAVIGATION */
 .app-nav {
+    position: relative; /* CRITICAL FIX: Ensures z-index works so buttons are clickable */
     height: 70px;
     display: flex;
     justify-content: space-between;
@@ -142,9 +143,16 @@ body {
 .theme-label { font-size: 0.7rem; color: var(--text-muted); font-family: 'Roboto Mono'; text-transform: uppercase; }
 .theme-dots { display: flex; gap: 8px; }
 .theme-dot {
-    width: 14px; height: 14px; border-radius: 50%; border: 1px solid #555; cursor: pointer; transition: 0.2s;
+    width: 20px; /* INCREASED SIZE FOR CLICKABILITY */
+    height: 20px; 
+    border-radius: 50%; 
+    border: 2px solid rgba(255,255,255,0.2); 
+    cursor: pointer; 
+    transition: 0.2s;
+    position: relative;
+    z-index: 1001; /* Extra layer of safety */
 }
-.theme-dot:hover { transform: scale(1.2); }
+.theme-dot:hover { transform: scale(1.2); border-color: white; }
 /* Dot Colors matching themes */
 .theme-dot.orbital { background: #00f2ff; }
 .theme-dot.titanium { background: #ff9d00; }
