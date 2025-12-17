@@ -11,24 +11,27 @@
 </head>
 <body>
 
-    <!-- Dynamic Background -->
+    <!-- [LAYER 1] Dynamic Background Canvas -->
+    <!-- Managed by js/background.js -->
     <canvas id="bg-canvas"></canvas>
 
-    <!-- App Navigation -->
+    <!-- [LAYER 2] Navigation Header -->
+    <!-- Logic handled in js/navigation.js -->
     <nav class="app-nav">
         <div class="logo">EJ.<span class="highlight">Robotics</span></div>
         <div class="nav-tabs">
-            <button class="nav-btn active" onclick="switchTab('home')"><i class="fas fa-home"></i> Profile</button>
-            <button class="nav-btn" onclick="switchTab('simulation')"><i class="fas fa-gamepad"></i> The Lab</button>
-            <button class="nav-btn" onclick="switchTab('cv')"><i class="fas fa-code-branch"></i> Trajectory</button>
-            <button class="nav-btn" onclick="switchTab('contact')"><i class="fas fa-envelope"></i> Contact</button>
+            <!-- onclick calls functions defined in navigation.js -->
+            <button class="nav-btn active" onclick="appNav.switchTab('home')"><i class="fas fa-home"></i> Profile</button>
+            <button class="nav-btn" onclick="appNav.switchTab('simulation')"><i class="fas fa-gamepad"></i> The Lab</button>
+            <button class="nav-btn" onclick="appNav.switchTab('cv')"><i class="fas fa-code-branch"></i> Trajectory</button>
+            <button class="nav-btn" onclick="appNav.switchTab('contact')"><i class="fas fa-envelope"></i> Contact</button>
         </div>
     </nav>
 
-    <!-- Main Content Area -->
+    <!-- [LAYER 3] Main Content Views -->
     <main id="main-container">
 
-        <!-- VIEW 1: HOME / PROFILE -->
+        <!-- VIEW 1: HOME -->
         <section id="home" class="view-section active-view">
             <div class="hero-content">
                 <div class="glitch-wrapper">
@@ -50,7 +53,8 @@
             </div>
         </section>
 
-        <!-- VIEW 2: THE LAB (SIMULATION) -->
+        <!-- VIEW 2: SIMULATION (The Lab) -->
+        <!-- Managed by js/simulation.js -->
         <section id="simulation" class="view-section">
             <div class="panel-header">
                 <h3><i class="fas fa-flask"></i> Research Demo: MPC-B Framework</h3>
@@ -62,8 +66,8 @@
                     <div class="control-group">
                         <label>Controller Logic</label>
                         <div class="toggle-switch">
-                            <button onclick="setMode('linear')" id="btn-linear" class="active">Linear (Standard)</button>
-                            <button onclick="setMode('mpc')" id="btn-mpc">MPC (My Thesis)</button>
+                            <button onclick="robotSim.setMode('linear')" id="btn-linear" class="active">Linear (Standard)</button>
+                            <button onclick="robotSim.setMode('mpc')" id="btn-mpc">MPC (My Thesis)</button>
                         </div>
                     </div>
                     <div class="stats">
@@ -89,14 +93,12 @@
             </div>
         </section>
 
-        <!-- VIEW 3: TRAJECTORY (CV) -->
+        <!-- VIEW 3: CV -->
         <section id="cv" class="view-section">
             <div class="panel-header">
                 <h3><i class="fas fa-history"></i> Experience Log</h3>
             </div>
-            
             <div class="timeline-container">
-                <!-- Item 1 -->
                 <div class="timeline-card glass-card">
                     <div class="time-marker">2022 - Present</div>
                     <div class="card-body">
@@ -104,13 +106,9 @@
                         <span class="org">Inria / Univ. of Bordeaux</span>
                         <p>Developed "MPC-B", a shared control framework for Franka Panda robots. 
                            Integrated QP solvers to guarantee safety during teleoperation, reducing collision risks by 60%.</p>
-                        <div class="tags">
-                            <span>Adaptive Filtering</span><span>C++</span><span>ROS</span>
-                        </div>
+                        <div class="tags"><span>Adaptive Filtering</span><span>C++</span><span>ROS</span></div>
                     </div>
                 </div>
-
-                <!-- Item 2 -->
                 <div class="timeline-card glass-card">
                     <div class="time-marker">2022</div>
                     <div class="card-body">
@@ -119,17 +117,13 @@
                         <p>Specialization in Control Theory and Robotics. Graduated with Honors.</p>
                     </div>
                 </div>
-
-                <!-- Item 3 -->
                 <div class="timeline-card glass-card">
                     <div class="time-marker">2020 - 2021</div>
                     <div class="card-body">
                         <h4>Marine Robotics Engineer</h4>
                         <span class="org">Project ALYSSA</span>
                         <p>Designed a 5-DOF ROV. Validated hydrodynamics via ANSYS Fluent and structural integrity via FEA.</p>
-                        <div class="tags">
-                            <span>SolidWorks</span><span>CFD</span><span>Mech Design</span>
-                        </div>
+                        <div class="tags"><span>SolidWorks</span><span>CFD</span><span>Mech Design</span></div>
                     </div>
                 </div>
             </div>
@@ -140,24 +134,23 @@
             <div class="contact-box glass-card">
                 <h3>Initialize Connection</h3>
                 <div class="contact-links">
-                    <a href="mailto:eliojabbour98@gmail.com" class="contact-item">
-                        <i class="fas fa-envelope"></i> eliojabbour98@gmail.com
-                    </a>
-                    <a href="https://linkedin.com/in/elio-jabbour" target="_blank" class="contact-item">
-                        <i class="fab fa-linkedin"></i> linkedin.com/in/elio-jabbour
-                    </a>
-                    <a href="https://github.com/Legolass98" target="_blank" class="contact-item">
-                        <i class="fab fa-github"></i> github.com/Legolass98
-                    </a>
+                    <a href="mailto:eliojabbour98@gmail.com" class="contact-item"><i class="fas fa-envelope"></i> eliojabbour98@gmail.com</a>
+                    <a href="https://linkedin.com/in/elio-jabbour" target="_blank" class="contact-item"><i class="fab fa-linkedin"></i> linkedin.com/in/elio-jabbour</a>
+                    <a href="https://github.com/Legolass98" target="_blank" class="contact-item"><i class="fab fa-github"></i> github.com/Legolass98</a>
                 </div>
-                <div class="location">
-                    <i class="fas fa-map-marker-alt"></i> Bordeaux, Nouvelle-Aquitaine, France
-                </div>
+                <div class="location"><i class="fas fa-map-marker-alt"></i> Bordeaux, Nouvelle-Aquitaine, France</div>
             </div>
         </section>
 
     </main>
 
-    <script src="script.js"></script>
+    <!-- [LAYER 4] Scripts - Loaded in specific order -->
+    <!-- 1. Navigation Logic -->
+    <script src="js/navigation.js"></script>
+    <!-- 2. Visual Effects (Background) -->
+    <script src="js/background.js"></script>
+    <!-- 3. Core Physics Simulation -->
+    <script src="js/simulation.js"></script>
+
 </body>
 </html>
