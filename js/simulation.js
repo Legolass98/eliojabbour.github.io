@@ -26,6 +26,7 @@ const robotSim = (function() {
     let simParticles = []; // FX particles, distinct from background particles
     let shake = 0;
     let gridOffset = 0;
+    let animationFrameId; // To control the loop
 
     // Game State
     let state = {
@@ -40,14 +41,17 @@ const robotSim = (function() {
 
     /* --- INITIALIZATION & RESIZING --- */
     function resize() {
-        // Only resize if the simulation view is visible to avoid 0x0 errors
-        if(simCanvas.offsetParent === null) return;
+        // Use container dimensions if canvas is hidden/0
+        const container = simCanvas.parentElement;
+        if (!container) return;
+
+        // Force a minimum size if container is hidden
+        simWidth = container.clientWidth || 300;
+        simHeight = container.clientHeight || 400;
         
-        const rect = simCanvas.parentElement.getBoundingClientRect();
-        simWidth = rect.width;
-        simHeight = rect.height;
         simCanvas.width = simWidth;
         simCanvas.height = simHeight;
+        
         resetPositions();
     }
 
@@ -145,7 +149,8 @@ const robotSim = (function() {
 
     /* --- MAIN LOOP --- */
     function update() {
-        if(simCanvas.offsetParent !== null) { // Only run if visible
+        // Always run update loop, but check visibility for rendering
+        // if(simCanvas.offsetParent !== null) { 
             
             // 1. Calculate Forces
             // Human pulls robot to blue dot
@@ -241,12 +246,13 @@ const robotSim = (function() {
             uiRefs.scoreVal.innerText = Math.floor(state.safetyScore) + "%";
 
             draw(predictedPath, isUnsafe);
-        }
-        requestAnimationFrame(update);
+        // }
+        animationFrameId = requestAnimationFrame(update);
     }
 
     /* --- RENDERING --- */
     function draw(path, crash) {
+        // Always clear to prevent trails
         ctx.clearRect(0, 0, simWidth, simHeight);
         ctx.save();
         if(shake > 0) ctx.translate((Math.random()-0.5)*shake, (Math.random()-0.5)*shake);
@@ -302,6 +308,7 @@ const robotSim = (function() {
         setTimeout(resize, 100); 
     });
     
+    // Explicitly call resize once to ensure variables are set
     resize();
     update();
 
