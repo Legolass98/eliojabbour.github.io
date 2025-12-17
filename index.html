@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elio Jabbour | Robotics PhD</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts: Rajdhani for Tech, Inter for Academic Text -->
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;500;700&family=Inter:wght@300;400;600&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -44,34 +45,38 @@
             <div class="hero-split">
                 <div class="hero-intro">
                     <div class="profile-frame">
-                        <img src="profile.jpg" onerror="this.src='https://via.placeholder.com/300x300/111/00f2ff?text=Upload+profile.jpg'" alt="Elio Jabbour" class="profile-img">
+                        <!-- Use your actual image here. I've added a fallback. -->
+                        <img src="profile.jpg" onerror="this.src='https://via.placeholder.com/300x300/111/00f2ff?text=EJ'" alt="Elio Jabbour" class="profile-img">
                         <div class="frame-decor"></div>
                     </div>
                     <div class="glitch-wrapper"><h1 class="glitch" data-text="Elio Jabbour">Elio Jabbour</h1></div>
                     <h2>Ph.D. Researcher @ INRIA</h2>
-                    <p class="mission-text">Bridging <strong>human intuition</strong> and <strong>predictive control</strong> via MPC and Haptics.</p>
+                    <p class="mission-text">
+                        Bridging the gap between <strong>human intuition</strong> and <strong>predictive control</strong> in complex robotic systems.
+                        <br><br>
+                        Specializing in <strong>Model Predictive Control (MPC)</strong>, <strong>Shared Autonomy</strong>, and <strong>Haptics</strong>.
+                    </p>
                 </div>
                 <div class="dashboard-grid">
                     <div class="dash-card">
                         <span class="dash-label">Key Metric</span>
                         <div class="dash-val highlight">+60%</div>
-                        <p>Safety improvement in teleoperation via MPC-B.</p>
+                        <p>Safety improvement in teleoperation via MPC-B vs. Linear control.</p>
                     </div>
                     <div class="dash-card">
-                        <span class="dash-label">Core Stack</span>
-                        <div class="dash-val">ROS2</div>
-                        <p>C++, Python, QP Solvers.</p>
+                        <span class="dash-label">Performance</span>
+                        <div class="dash-val">&lt;5ms</div>
+                        <p>QP Solver time per control cycle (200Hz loop).</p>
                     </div>
-                    <!-- DIRECT CLICK: Opens PhD Project -->
-                    <div class="dash-card clickable" onclick="appNav.openProject('mpc')">
-                        <span class="dash-label">Primary Research</span>
+                    <div class="dash-card clickable" onclick="appNav.switchTab('research')">
+                        <span class="dash-label">Top Publication</span>
                         <div class="dash-val">MPC-B</div>
-                        <p>Click to view Thesis & Simulation.</p>
+                        <p>Shared-Autonomy for Haptic Teleoperation (2025).</p>
                     </div>
                     <div class="dash-card clickable" onclick="appNav.openProject('mpc')">
-                        <span class="dash-label">Live Demo</span>
-                        <div class="dash-val highlight">Play</div>
-                        <p>Interactive Control Sandbox.</p>
+                        <span class="dash-label">Simulation</span>
+                        <div class="dash-val highlight">Live</div>
+                        <p>Interactive Control Sandbox. <br><strong>Click to Play.</strong></p>
                     </div>
                 </div>
             </div>
@@ -83,66 +88,113 @@
                 <h3><i class="fas fa-file-alt"></i> Publications</h3>
             </div>
             <div class="papers-grid">
-                <!-- DIRECT CLICK: Opens PhD Project -->
                 <div class="paper-card glass-card clickable" onclick="appNav.openProject('mpc')">
                     <div class="paper-type">PhD Thesis (2025)</div>
                     <h4>Shared-Autonomy Control for Human-Robot Collaboration</h4>
-                    <p class="abstract">MPC-B Framework validated on Franka Panda. Click to explore full project.</p>
+                    <p class="abstract">
+                        A novel framework blending human inputs with safety constraints using Nonlinear MPC.
+                        Validated on <strong>Franka Panda</strong> robots.
+                        <br>
+                        <strong>Results:</strong> 60% less collision risk, 50% faster task completion.
+                    </p>
                     <div class="paper-links">
-                        <span class="btn-text highlight"><i class="fas fa-arrow-right"></i> View Project & Sim</span>
+                        <span class="btn-text highlight"><i class="fas fa-play"></i> Run Simulation</span>
+                        <span class="btn-text"><i class="fas fa-file-pdf"></i> Read PDF</span>
                     </div>
                 </div>
                 <div class="paper-card glass-card">
                     <div class="paper-type">Conference Paper</div>
                     <h4>Adaptive Kalman Filtering for Intent Estimation</h4>
-                    <p class="abstract">Recursive estimation to filter noisy haptic signals.</p>
+                    <p class="abstract">
+                        Recursive estimation to filter noisy haptic signals and predict operator intent in real-time.
+                        Reduced user workload by 60% in human-in-the-loop trials.
+                    </p>
                     <div class="paper-links"><a href="#" class="btn-text">View DOI</a></div>
                 </div>
             </div>
         </section>
 
-        <!-- 3. THE LAB (MODULARIZED) -->
+        <!-- 3. THE LAB (MODULARIZED & RICH) -->
         <section id="simulation" class="view-section">
             
             <!-- A. The Grid (Menu) -->
             <div id="lab-grid-container">
                 <div class="panel-header">
                     <h3><i class="fas fa-flask"></i> The Lab</h3>
-                    <p>Select a project to load data.</p>
+                    <p>Select a project to load data & simulations.</p>
                 </div>
                 <div class="lab-grid">
+                    <!-- MPC CARD -->
                     <div class="project-card" onclick="appNav.openProject('mpc')">
-                        <div class="card-icon"><i class="fas fa-gamepad"></i></div>
+                        <div class="card-top">
+                            <div class="card-icon"><i class="fas fa-gamepad"></i></div>
+                            <div class="card-stats">
+                                <span><i class="fas fa-tachometer-alt"></i> 5ms</span>
+                                <span><i class="fas fa-shield-alt"></i> +60% Safety</span>
+                            </div>
+                        </div>
                         <div class="card-content">
-                            <span class="category-tag">PhD Thesis</span>
+                            <span class="category-tag">PhD Thesis / Demo</span>
                             <h4>MPC-B Sandbox</h4>
+                            <p>Interactive WebGL simulation comparing Naive Linear Control vs. My Constraint-Aware MPC.</p>
+                            <div class="stack-mini"><span>WebGL</span><span>C++ Solver</span><span>ROS2</span></div>
                         </div>
                     </div>
+
+                    <!-- HADES CARD -->
                     <div class="project-card" onclick="appNav.openProject('hades')">
-                        <div class="card-icon"><i class="fas fa-water"></i></div>
+                        <div class="card-top">
+                            <div class="card-icon"><i class="fas fa-water"></i></div>
+                            <div class="card-stats">
+                                <span><i class="fas fa-ruler"></i> 14-DOF</span>
+                                <span><i class="fas fa-wind"></i> 4.5 m/s</span>
+                            </div>
+                        </div>
                         <div class="card-content">
                             <span class="category-tag">Underwater Drone</span>
                             <h4>Hades ROV</h4>
+                            <p>Bio-inspired eel robot for Karst exploration. Kinematic modeling & CFD validation.</p>
+                            <div class="stack-mini"><span>SolidWorks</span><span>MATLAB</span><span>ANSYS</span></div>
                         </div>
                     </div>
+
+                    <!-- ALYSSA CARD -->
                     <div class="project-card" onclick="appNav.openProject('alyssa')">
-                        <div class="card-icon"><i class="fas fa-ship"></i></div>
+                        <div class="card-top">
+                            <div class="card-icon"><i class="fas fa-ship"></i></div>
+                            <div class="card-stats">
+                                <span><i class="fas fa-arrow-down"></i> 100m Depth</span>
+                                <span><i class="fas fa-weight-hanging"></i> 10 Bar</span>
+                            </div>
+                        </div>
                         <div class="card-content">
                             <span class="category-tag">Marine / CFD</span>
                             <h4>Project ALYSSA</h4>
+                            <p>5-DOF Inspection ROV. Hydrodynamic optimization & structural FEA analysis.</p>
+                            <div class="stack-mini"><span>ANSYS</span><span>Simulink</span><span>FEA</span></div>
                         </div>
                     </div>
+
+                    <!-- HAPTICS CARD -->
                     <div class="project-card" onclick="appNav.openProject('haptics')">
-                        <div class="card-icon"><i class="fas fa-hand-paper"></i></div>
+                        <div class="card-top">
+                            <div class="card-icon"><i class="fas fa-hand-paper"></i></div>
+                            <div class="card-stats">
+                                <span><i class="fas fa-robot"></i> 7-DOF</span>
+                                <span><i class="fas fa-network-wired"></i> Null Space</span>
+                            </div>
+                        </div>
                         <div class="card-content">
                             <span class="category-tag">Simulation</span>
-                            <h4>Haptics</h4>
+                            <h4>Haptic Teleoperation</h4>
+                            <p>Bilateral control with force feedback using Omega.7 and Franka Emika.</p>
+                            <div class="stack-mini"><span>ROS2</span><span>C++</span><span>Omega.7</span></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- B. Dynamic Project Container (Empty shell, filled by JS) -->
+            <!-- B. Dynamic Project Container -->
             <div id="dynamic-project-container" style="display: none;">
                 <button class="back-btn" onclick="appNav.closeProject()"><i class="fas fa-arrow-left"></i> Return to Lab</button>
                 
@@ -156,22 +208,26 @@
                     <ul id="dp-details" style="margin-top: 20px; padding-left: 20px; color: #ccc;"></ul>
                 </div>
 
-                <!-- Simulation Slot (Only visible for MPC) -->
+                <!-- Simulation Slot -->
                 <div id="project-mpc-sim-view" style="display: none; margin-top: 30px;">
                     <div class="sim-wrapper glass-panel">
                         <div class="sim-controls">
-                            <div class="toggle-switch">
-                                <button onclick="robotSim.setMode('linear')" id="btn-linear" class="active">Naive Linear</button>
-                                <button onclick="robotSim.setMode('mpc')" id="btn-mpc">MPC-B</button>
+                            <div class="control-group">
+                                <label>Controller Architecture</label>
+                                <div class="toggle-switch">
+                                    <button onclick="robotSim.setMode('linear')" id="btn-linear" class="active">Naive Linear</button>
+                                    <button onclick="robotSim.setMode('mpc')" id="btn-mpc">MPC-B (Thesis)</button>
+                                </div>
                             </div>
                             <div class="stats">
-                                <span id="safety-status" class="value safe">OPTIMAL</span>
+                                <div class="stat-box"><span class="label">Safety</span><span id="score-val" class="value">100%</span></div>
+                                <div class="stat-box"><span class="label">Status</span><span id="safety-status" class="value safe">OPTIMAL</span></div>
                             </div>
                         </div>
                         <div class="canvas-container">
                             <canvas id="simCanvas"></canvas>
                             <div class="overlay-ui">
-                                <div id="sim-desc" class="desc-toast">Drag Blue Dot.</div>
+                                <div id="sim-desc" class="desc-toast">Drag Blue Dot. <strong>Green Trail</strong> = Prediction.</div>
                             </div>
                         </div>
                     </div>
@@ -180,37 +236,95 @@
 
         </section>
 
-        <!-- 4. CV (TRAJECTORY) -->
+        <!-- 4. CV (TRAJECTORY) - REPOPULATED -->
         <section id="cv" class="view-section">
             <div class="panel-header"><h3><i class="fas fa-code-branch"></i> Trajectory</h3></div>
             <div class="timeline-container">
-                <!-- LINKING: Clicking PhD Card opens Project -->
-                <div class="timeline-card current clickable" onclick="appNav.openProject('mpc')" style="cursor: pointer;">
-                    <div class="time-marker">2022 - Present</div>
+                
+                <!-- PHD -->
+                <div class="timeline-card current clickable" onclick="appNav.openProject('mpc')">
+                    <div class="time-marker">Oct 2022 - Present</div>
                     <div class="card-body">
-                        <h4>PhD Researcher <i class="fas fa-external-link-alt" style="font-size: 0.8rem; color: var(--primary);"></i></h4>
-                        <span class="org">INRIA</span>
-                        <p>Developed MPC-B. Click to view project details.</p>
-                        <div class="stack-mini"><span>ROS2</span><span>MPC</span></div>
+                        <h4>PhD Researcher in Robotics <i class="fas fa-external-link-alt" style="font-size: 0.8rem; color: var(--primary);"></i></h4>
+                        <span class="org">INRIA / Univ. of Bordeaux</span>
+                        <p><strong>Thesis:</strong> Shared-Autonomy Control for Improving Human-Robot Collaboration.</p>
+                        <ul>
+                            <li>Developed "MPC-B" framework on <strong>Franka Panda</strong> (ROS, C++, QP Solvers).</li>
+                            <li>Created <strong>Adaptive Kalman Filtering</strong> for intent estimation.</li>
+                            <li>User Studies: <strong>+60% Safety</strong>, <strong>+50% Speed</strong>, <strong>-60% Workload</strong>.</li>
+                            <li>Used Genetic Algorithms for PID/MPC tuning.</li>
+                        </ul>
+                        <div class="stack-mini"><span>C++</span><span>ROS2</span><span>MPC</span><span>QP</span></div>
                     </div>
                 </div>
-                <div class="timeline-card clickable" onclick="appNav.openProject('hades')" style="cursor: pointer;">
+
+                <!-- PPRIME -->
+                <div class="timeline-card clickable" onclick="appNav.openProject('haptics')">
+                    <div class="time-marker">Mar 2022 - Aug 2022</div>
+                    <div class="card-body">
+                        <h4>HRI & Control Research Intern <i class="fas fa-external-link-alt" style="font-size: 0.8rem; color: var(--primary);"></i></h4>
+                        <span class="org">Pprime - CNRS (Poitiers)</span>
+                        <p>Control strategies for Franka Emika 7-DOF arm.</p>
+                        <ul>
+                            <li>Implemented <strong>Operational Space PID</strong> & <strong>Null Space Redundancy</strong>.</li>
+                            <li>Haptic Teleoperation via <strong>Force Dimension Omega.7</strong>.</li>
+                            <li>Intention recognition for assembly tasks.</li>
+                        </ul>
+                        <div class="stack-mini"><span>Haptics</span><span>Inverse Dynamics</span></div>
+                    </div>
+                </div>
+
+                <!-- LIRMM -->
+                <div class="timeline-card clickable" onclick="appNav.openProject('hades')">
+                    <div class="time-marker">Sep 2021 - Mar 2022</div>
+                    <div class="card-body">
+                        <h4>Robotics Research Intern <i class="fas fa-external-link-alt" style="font-size: 0.8rem; color: var(--primary);"></i></h4>
+                        <span class="org">LIRMM (Montpellier)</span>
+                        <p>Design of 'Hades' Bio-Inspired ROV.</p>
+                        <ul>
+                            <li>Designed 14-DOF, 12-thruster eel-like robot (SolidWorks).</li>
+                            <li><strong>CFD Analysis (ANSYS Fluent)</strong> confirming 4.5m/s speed.</li>
+                            <li>Euler-Lagrange Kinematic modeling (MATLAB).</li>
+                        </ul>
+                        <div class="stack-mini"><span>Bio-Inspired</span><span>CFD</span><span>MATLAB</span></div>
+                    </div>
+                </div>
+
+                <!-- MSC -->
+                <div class="timeline-card">
+                    <div class="time-marker">2022</div>
+                    <div class="card-body">
+                        <h4>MSc in Robotics</h4>
+                        <span class="org">University of Montpellier</span>
+                        <p>Specialization in Control Theory and Robotics. Graduated with Honors.</p>
+                    </div>
+                </div>
+
+                <!-- ALYSSA -->
+                <div class="timeline-card clickable" onclick="appNav.openProject('alyssa')">
+                    <div class="time-marker">Jun 2020 - May 2021</div>
+                    <div class="card-body">
+                        <h4>Marine Robotics Project Engineer <i class="fas fa-external-link-alt" style="font-size: 0.8rem; color: var(--primary);"></i></h4>
+                        <span class="org">Project ALYSSA (Beirut)</span>
+                        <p>Designed 5-DOF ROV for 60m depth.</p>
+                        <ul>
+                            <li>Hydrodynamic optimization via ANSYS Fluent.</li>
+                            <li>Control simulation in <strong>Simulink/SimMechanics</strong>.</li>
+                            <li><strong>FEA Analysis</strong> for pressure integrity.</li>
+                        </ul>
+                        <div class="stack-mini"><span>SolidWorks</span><span>FEA</span><span>Simulink</span></div>
+                    </div>
+                </div>
+
+                 <!-- BSC -->
+                 <div class="timeline-card">
                     <div class="time-marker">2021</div>
                     <div class="card-body">
-                        <h4>Research Intern <i class="fas fa-external-link-alt" style="font-size: 0.8rem; color: var(--primary);"></i></h4>
-                        <span class="org">LIRMM</span>
-                        <p>Designed Hades Bio-Inspired ROV.</p>
+                        <h4>BSc in Mechanical Engineering</h4>
+                        <span class="org">Holy Spirit University of Kaslik</span>
                     </div>
                 </div>
-                <div class="timeline-card clickable" onclick="appNav.openProject('alyssa')" style="cursor: pointer;">
-                    <div class="time-marker">2020</div>
-                    <div class="card-body">
-                        <h4>Marine Robotics Engineer <i class="fas fa-external-link-alt" style="font-size: 0.8rem; color: var(--primary);"></i></h4>
-                        <span class="org">Project ALYSSA</span>
-                        <p>Designed a 5-DOF ROV. Validated hydrodynamics via ANSYS Fluent.</p>
-                    </div>
-                </div>
-                <!-- Other cards... -->
+
             </div>
         </section>
 
@@ -227,8 +341,8 @@
     </main>
 
     <!-- LOAD SCRIPTS (Order matters) -->
-    <script src="js/project_data.js"></script> <!-- NEW: Load Database first -->
-    <script src="js/navigation.js"></script>    <!-- Load Logic second -->
+    <script src="js/project_data.js"></script> 
+    <script src="js/navigation.js"></script>    
     <script src="js/background.js"></script>
     <script src="js/simulation.js"></script>
 
