@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;500;700&family=Inter:wght@300;400;600&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
+<body data-theme="orbital"> <!-- Default Theme -->
 
     <!-- [LAYER 1] Dynamic Background Canvas -->
     <canvas id="bg-canvas"></canvas>
@@ -17,12 +17,27 @@
     <!-- [LAYER 2] Navigation Header -->
     <nav class="app-nav">
         <div class="logo">EJ.<span class="highlight">Research</span></div>
-        <div class="nav-tabs">
-            <button class="nav-btn active" onclick="appNav.switchTab('home')"><i class="fas fa-home"></i> Profile</button>
-            <button class="nav-btn" onclick="appNav.switchTab('research')"><i class="fas fa-book"></i> Publications</button>
-            <button class="nav-btn" onclick="appNav.switchTab('simulation')"><i class="fas fa-microchip"></i> The Lab</button>
-            <button class="nav-btn" onclick="appNav.switchTab('cv')"><i class="fas fa-code-branch"></i> Trajectory</button>
-            <button class="nav-btn" onclick="appNav.switchTab('contact')"><i class="fas fa-envelope"></i> Contact</button>
+        
+        <div class="nav-center">
+            <div class="nav-tabs">
+                <button class="nav-btn active" onclick="appNav.switchTab('home')"><i class="fas fa-home"></i> Profile</button>
+                <button class="nav-btn" onclick="appNav.switchTab('research')"><i class="fas fa-book"></i> Publications</button>
+                <button class="nav-btn" onclick="appNav.switchTab('simulation')"><i class="fas fa-microchip"></i> The Lab</button>
+                <button class="nav-btn" onclick="appNav.switchTab('cv')"><i class="fas fa-code-branch"></i> Trajectory</button>
+                <button class="nav-btn" onclick="appNav.switchTab('contact')"><i class="fas fa-envelope"></i> Contact</button>
+            </div>
+        </div>
+
+        <!-- NEW: Theme Switcher -->
+        <div class="theme-selector">
+            <span class="theme-label"><i class="fas fa-palette"></i> UI Mode</span>
+            <div class="theme-dots">
+                <button class="theme-dot orbital" onclick="appNav.setTheme('orbital')" title="Orbital (Blue/Cyan)"></button>
+                <button class="theme-dot titanium" onclick="appNav.setTheme('titanium')" title="Titanium (Grey/Orange)"></button>
+                <button class="theme-dot aurora" onclick="appNav.setTheme('aurora')" title="Aurora (Purple/Teal)"></button>
+                <button class="theme-dot matrix" onclick="appNav.setTheme('matrix')" title="Matrix (Black/Green)"></button>
+                <button class="theme-dot carbon" onclick="appNav.setTheme('carbon')" title="Carbon (Monochrome)"></button>
+            </div>
         </div>
     </nav>
 
@@ -94,7 +109,7 @@
             </div>
         </section>
 
-        <!-- VIEW 3: THE LAB (Redesigned) -->
+        <!-- VIEW 3: THE LAB -->
         <section id="simulation" class="view-section">
             
             <!-- 3A. Lab Grid (Project Selection) -->
@@ -175,7 +190,7 @@
                 <div class="sim-wrapper glass-panel">
                     <div class="sim-controls">
                         <div class="control-group">
-                            <label style="color: #666; font-size: 0.8rem; text-transform: uppercase;">Controller Logic</label>
+                            <label style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;">Controller Logic</label>
                             <div class="toggle-switch">
                                 <button onclick="robotSim.setMode('linear')" id="btn-linear" class="active">Linear (Standard)</button>
                                 <button onclick="robotSim.setMode('mpc')" id="btn-mpc">MPC (My Thesis)</button>
@@ -183,12 +198,12 @@
                         </div>
                         <div class="stats">
                             <div class="stat-box">
-                                <span class="label" style="display: block; font-size: 0.8rem; color: #666;">Safety Integrity</span>
+                                <span class="label" style="display: block; font-size: 0.8rem; color: var(--text-muted);">Safety Integrity</span>
                                 <span id="score-val" class="value" style="font-family: 'Roboto Mono'; font-size: 1.2rem;">100%</span>
                             </div>
                             <div class="stat-box">
-                                <span class="label" style="display: block; font-size: 0.8rem; color: #666;">State</span>
-                                <span id="safety-status" class="value safe" style="font-family: 'Roboto Mono'; font-size: 1.2rem; color: #00ff9d;">OPTIMAL</span>
+                                <span class="label" style="display: block; font-size: 0.8rem; color: var(--text-muted);">State</span>
+                                <span id="safety-status" class="value safe" style="font-family: 'Roboto Mono'; font-size: 1.2rem; color: var(--success);">OPTIMAL</span>
                             </div>
                         </div>
                     </div>

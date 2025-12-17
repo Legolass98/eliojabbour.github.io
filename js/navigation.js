@@ -30,7 +30,6 @@ const appNav = {
             activeView.classList.add('active-view');
             
             // Special Case: If switching to 'simulation' tab, reset to the main grid view
-            // This ensures we don't get stuck in a specific project sub-view
             if(tabId === 'simulation') {
                 this.closeProject();
             }
@@ -42,26 +41,15 @@ const appNav = {
      * @param {string} projectId - The ID suffix for the project container (e.g. 'mpc' -> 'project-mpc')
      */
     openProject: function(projectId) {
-        // First ensure we are in the simulation tab
         this.switchTab('simulation');
-
-        // Hide the grid
         document.getElementById('lab-grid-container').style.display = 'none';
-
-        // Hide all other project views first (safety cleanup)
         document.querySelectorAll('.project-view').forEach(el => el.style.display = 'none');
-
-        // Show the specific project view
+        
         const projectView = document.getElementById('project-' + projectId);
         if(projectView) {
             projectView.style.display = 'block';
-
-            // [INTER-MODULE COMMUNICATION]
-            // If opening the MPC project, trigger the simulation resize
             if(projectId === 'mpc' && typeof robotSim !== 'undefined') {
-                setTimeout(() => {
-                    robotSim.resize(); 
-                }, 50); 
+                setTimeout(() => { robotSim.resize(); }, 50); 
             }
         }
     },
@@ -70,11 +58,20 @@ const appNav = {
      * Closes the active project view and returns to the Lab Grid.
      */
     closeProject: function() {
-        // Hide all project views
         document.querySelectorAll('.project-view').forEach(el => el.style.display = 'none');
-        
-        // Show the main grid
         const grid = document.getElementById('lab-grid-container');
         if(grid) grid.style.display = 'block';
+    },
+
+    /**
+     * NEW: Sets the UI Theme by changing the body attribute.
+     * @param {string} themeName - 'orbital', 'titanium', 'aurora', 'matrix', 'carbon'
+     */
+    setTheme: function(themeName) {
+        document.body.setAttribute('data-theme', themeName);
+        
+        // Trigger background particle update if needed
+        // (We dispatch a custom event so background.js can listen for it)
+        window.dispatchEvent(new Event('themeChanged'));
     }
 };

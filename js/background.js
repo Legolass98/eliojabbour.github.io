@@ -16,11 +16,32 @@
     let bgWidth, bgHeight;
     let particles = [];
     let mouse = { x: -9999, y: -9999, radius: 150 }; // Init off-screen
+    
+    // Dynamic Colors based on CSS variables
+    let particleColor = 'rgba(0, 242, 255, 0.4)';
+    let lineColor = 'rgba(0, 242, 255, 0.1)';
+
+    function updateColors() {
+        // Read the computed style of the --primary variable from the body
+        const style = getComputedStyle(document.body);
+        const primary = style.getPropertyValue('--primary').trim();
+        
+        // Convert to RGBA for canvas
+        // This is a simple heuristic. For robustness, we assume hex or named colors
+        // and let canvas fillStyle handle it, but we add opacity manually if needed.
+        particleColor = primary; 
+        lineColor = primary; // We'll apply globalAlpha for transparency
+    }
 
     // Event Listener for Mouse Interaction
     window.addEventListener('mousemove', (e) => {
         mouse.x = e.clientX;
         mouse.y = e.clientY;
+    });
+
+    // Listen for Theme Changes (Custom Event from navigation.js)
+    window.addEventListener('themeChanged', () => {
+        setTimeout(updateColors, 100); // Small delay to allow CSS to apply
     });
 
     function resizeBg() {
@@ -29,6 +50,7 @@
         bgCanvas.width = bgWidth;
         bgCanvas.height = bgHeight;
         initParticles();
+        updateColors();
     }
 
     function initParticles() {
@@ -52,9 +74,7 @@
 
     function drawBg() {
         bgCtx.clearRect(0, 0, bgWidth, bgHeight);
-        bgCtx.fillStyle = 'rgba(0, 242, 255, 0.4)'; // Neon Cyan
-        bgCtx.strokeStyle = 'rgba(112, 0, 255, 0.1)'; // Neon Purple
-
+        
         for (let i = 0; i < particles.length; i++) {
             let p = particles[i];
             
@@ -81,6 +101,8 @@
             p.y += p.vy;
 
             // Draw Particle
+            bgCtx.globalAlpha = 0.4;
+            bgCtx.fillStyle = particleColor;
             bgCtx.beginPath();
             bgCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             bgCtx.fill();
@@ -90,8 +112,10 @@
                 let p2 = particles[j];
                 let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
                 if (dist < 100) { // Connection threshold
+                    bgCtx.globalAlpha = 0.1 * (1 - dist/100); // Fade out with distance
+                    bgCtx.strokeStyle = lineColor;
                     bgCtx.beginPath();
-                    bgCtx.lineWidth = 1 - (dist/100);
+                    bgCtx.lineWidth = 1;
                     bgCtx.moveTo(p.x, p.y);
                     bgCtx.lineTo(p2.x, p2.y);
                     bgCtx.stroke();
