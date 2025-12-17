@@ -70,7 +70,7 @@ const projectDatabase = {
         ],
         hasSimulation: false,
         has3DModel: true,
-        modelPath: "models/alyssa.glb"
+        modelPath: "img\profilepicture\Alyssaglb.glb"
     },
 
     // 4. Haptics (Internship)
