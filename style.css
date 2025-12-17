@@ -210,6 +210,7 @@ body {
     transition: 0.3s;
     position: relative;
     overflow: hidden;
+    cursor: pointer; /* Ensure pointer shows */
 }
 .paper-card:hover { 
     border-color: var(--primary); 
@@ -377,6 +378,7 @@ body {
     padding: 25px;
     margin-bottom: 40px;
     transition: 0.3s;
+    cursor: pointer; /* POINTER FIX */
 }
 
 /* The Circuit Node */
@@ -457,17 +459,46 @@ body {
 }
 .contact-item:hover { border-color: var(--primary); background: rgba(0,0,0,0.2); color: var(--primary); }
 
-/* Responsive */
+/* Responsive Mobile Layout Improvements */
 @media (max-width: 900px) {
-    .app-nav { padding: 0 10px; flex-direction: column; height: auto; padding-bottom: 15px; }
-    .nav-tabs { margin-top: 15px; flex-wrap: wrap; justify-content: center; }
-    .timeline-container { padding-left: 30px; border-left-width: 1px; margin-left: 10px; }
-    .timeline-card::before { left: -36px; width: 12px; height: 12px; top: 28px; }
-    .timeline-card::after { left: -30px; width: 30px; }
-    .theme-selector { position: absolute; top: 20px; right: 20px; }
+    /* Navigation: Make it compact */
+    .app-nav { 
+        padding: 10px; 
+        flex-direction: column; 
+        height: auto; 
+        gap: 10px;
+    }
+    .nav-center { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; } /* Scrollable tabs */
+    .nav-tabs { width: max-content; padding-bottom: 5px; } /* Ensure tabs fit */
+    .theme-selector { position: static; width: 100%; align-items: center; flex-direction: row; justify-content: center; margin-top: 5px; }
+
+    /* Hero Section: Stack & Compact */
+    .hero-split { grid-template-columns: 1fr; gap: 30px; padding-top: 10px; min-height: auto; }
+    .hero-intro { text-align: center; padding: 0 10px; }
+    .profile-frame { margin: 0 auto 20px; width: 160px; height: 160px; }
+    .glitch { font-size: 3rem; }
+    .hero-intro h2 { font-size: 1.4rem; }
+    .mission-text { font-size: 1rem; }
+
+    /* Dashboard: 1 Column */
+    .dashboard-grid { grid-template-columns: 1fr; gap: 15px; }
+    .dash-card { padding: 20px; }
+    .dash-val { font-size: 2rem; }
+
+    /* Timeline: Compact */
+    .timeline-container { padding-left: 20px; border-left-width: 1px; margin-left: 5px; }
+    .timeline-card { padding: 15px; margin-bottom: 25px; }
+    .timeline-card::before { left: -26px; width: 10px; height: 10px; top: 20px; }
+    .timeline-card::after { left: -20px; width: 20px; top: 24px; }
+    .card-body h4 { font-size: 1.2rem; }
+
+    /* Simulation View */
+    .canvas-container { height: 350px; } /* Shorter canvas for mobile */
+    .sim-controls { flex-direction: column; gap: 15px; align-items: flex-start; }
+    .toggle-switch { width: 100%; display: flex; }
+    .toggle-switch button { flex: 1; }
+    .stats { width: 100%; justify-content: space-between; margin-top: 10px; }
     
-    .hero-split { grid-template-columns: 1fr; gap: 40px; padding-top: 20px; }
-    .hero-intro { text-align: center; }
-    .profile-frame { margin: 0 auto 30px; }
-    .mission-text { margin: 20px auto; }
+    /* Main Padding */
+    #main-container { padding: 20px 15px; }
 }
