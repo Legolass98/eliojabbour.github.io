@@ -14,7 +14,6 @@ const appNav = {
      */
     switchTab: function(tabId) {
         // 1. Update Navigation Buttons
-        // We find the button that triggered this via the onclick attribute matching
         const buttons = document.querySelectorAll('.nav-btn');
         buttons.forEach(btn => btn.classList.remove('active'));
         
@@ -30,14 +29,52 @@ const appNav = {
         if(activeView) {
             activeView.classList.add('active-view');
             
-            // [INTER-MODULE COMMUNICATION]
-            // If we switched to the Simulation tab, we must tell the simulation 
-            // to resize its canvas, otherwise it might render at 0x0 size.
-            if(tabId === 'simulation' && typeof robotSim !== 'undefined') {
-                setTimeout(() => {
-                    robotSim.resize(); 
-                }, 50); // Small delay to allow CSS transitions to complete
+            // Special Case: If switching to 'simulation' tab, reset to the main grid view
+            // This ensures we don't get stuck in a specific project sub-view
+            if(tabId === 'simulation') {
+                this.closeProject();
             }
         }
+    },
+
+    /**
+     * Opens a specific project detail view within the 'The Lab' section.
+     * @param {string} projectId - The ID suffix for the project container (e.g. 'mpc' -> 'project-mpc')
+     */
+    openProject: function(projectId) {
+        // First ensure we are in the simulation tab
+        this.switchTab('simulation');
+
+        // Hide the grid
+        document.getElementById('lab-grid-container').style.display = 'none';
+
+        // Hide all other project views first (safety cleanup)
+        document.querySelectorAll('.project-view').forEach(el => el.style.display = 'none');
+
+        // Show the specific project view
+        const projectView = document.getElementById('project-' + projectId);
+        if(projectView) {
+            projectView.style.display = 'block';
+
+            // [INTER-MODULE COMMUNICATION]
+            // If opening the MPC project, trigger the simulation resize
+            if(projectId === 'mpc' && typeof robotSim !== 'undefined') {
+                setTimeout(() => {
+                    robotSim.resize(); 
+                }, 50); 
+            }
+        }
+    },
+
+    /**
+     * Closes the active project view and returns to the Lab Grid.
+     */
+    closeProject: function() {
+        // Hide all project views
+        document.querySelectorAll('.project-view').forEach(el => el.style.display = 'none');
+        
+        // Show the main grid
+        const grid = document.getElementById('lab-grid-container');
+        if(grid) grid.style.display = 'block';
     }
 };
