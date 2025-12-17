@@ -1,76 +1,88 @@
 /**
- * [MODULE: NAVIGATION]
- * This file handles the Single Page Application (SPA) logic.
- * It toggles visibility of sections (Home, Simulation, CV) without reloading the page.
- * * Future AI Note: 
- * We use a global namespace `appNav` to prevent function name collisions 
- * with other scripts.
+ * [MODULE: NAVIGATION & RENDERER]
+ * Handles tab switching AND dynamic content generation.
  */
 
 const appNav = {
-    /**
-     * Switches the active view tab.
-     * @param {string} tabId - The ID of the section to show (e.g., 'home', 'simulation')
-     */
+    
+    // --- 1. Tab Switching Logic ---
     switchTab: function(tabId) {
-        // 1. Update Navigation Buttons
-        const buttons = document.querySelectorAll('.nav-btn');
-        buttons.forEach(btn => btn.classList.remove('active'));
-        
+        // Update Buttons
+        document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
         const targetBtn = document.querySelector(`button[onclick="appNav.switchTab('${tabId}')"]`);
         if(targetBtn) targetBtn.classList.add('active');
     
-        // 2. Hide all View Sections
-        const views = document.querySelectorAll('.view-section');
-        views.forEach(view => view.classList.remove('active-view'));
+        // Hide all Views
+        document.querySelectorAll('.view-section').forEach(view => view.classList.remove('active-view'));
     
-        // 3. Show Target View
+        // Show Target View
         const activeView = document.getElementById(tabId);
         if(activeView) {
             activeView.classList.add('active-view');
             
-            // Special Case: If switching to 'simulation' tab, reset to the main grid view
+            // Special reset for Lab
             if(tabId === 'simulation') {
                 this.closeProject();
             }
         }
     },
 
-    /**
-     * Opens a specific project detail view within the 'The Lab' section.
-     * @param {string} projectId - The ID suffix for the project container (e.g. 'mpc' -> 'project-mpc')
-     */
+    // --- 2. Project Rendering Logic (The "Modular" Part) ---
     openProject: function(projectId) {
+        // A. Switch to Lab Tab
         this.switchTab('simulation');
+
+        // B. Get Data from Database
+        const data = projectDatabase[projectId];
+        if(!data) { console.error("Project not found:", projectId); return; }
+
+        // C. Hide Grid, Show Detail Container
         document.getElementById('lab-grid-container').style.display = 'none';
-        document.querySelectorAll('.project-view').forEach(el => el.style.display = 'none');
+        const container = document.getElementById('dynamic-project-container');
+        container.style.display = 'block';
+
+        // D. Inject Content (Dynamic Rendering)
+        // 1. Title & Header
+        document.getElementById('dp-title').innerText = data.title;
+        document.getElementById('dp-subtitle').innerText = data.subtitle;
         
-        const projectView = document.getElementById('project-' + projectId);
-        if(projectView) {
-            projectView.style.display = 'block';
-            if(projectId === 'mpc' && typeof robotSim !== 'undefined') {
-                setTimeout(() => { robotSim.resize(); }, 50); 
+        // 2. Tags
+        const tagContainer = document.getElementById('dp-tags');
+        tagContainer.innerHTML = '';
+        data.tags.forEach(tag => {
+            tagContainer.innerHTML += `<span>${tag}</span>`;
+        });
+
+        // 3. Description & Details
+        document.getElementById('dp-description').innerHTML = data.description;
+        
+        const listContainer = document.getElementById('dp-details');
+        listContainer.innerHTML = '';
+        data.details.forEach(item => {
+            listContainer.innerHTML += `<li>${item}</li>`;
+        });
+
+        // E. Handle Simulation (Special Case)
+        const simView = document.getElementById('project-mpc-sim-view');
+        if(data.hasSimulation) {
+            simView.style.display = 'block';
+            if(typeof robotSim !== 'undefined') {
+                setTimeout(() => robotSim.resize(), 50);
             }
+        } else {
+            simView.style.display = 'none';
         }
     },
 
-    /**
-     * Closes the active project view and returns to the Lab Grid.
-     */
+    // --- 3. Close Logic ---
     closeProject: function() {
-        document.querySelectorAll('.project-view').forEach(el => el.style.display = 'none');
-        const grid = document.getElementById('lab-grid-container');
-        if(grid) grid.style.display = 'block';
+        document.getElementById('dynamic-project-container').style.display = 'none';
+        document.getElementById('lab-grid-container').style.display = 'block';
     },
 
-    /**
-     * Sets the UI Theme by changing the body attribute.
-     * @param {string} themeName - 'orbital', 'titanium', 'aurora', 'matrix', 'carbon'
-     */
+    // --- 4. Theme Engine ---
     setTheme: function(themeName) {
         document.body.setAttribute('data-theme', themeName);
-        
-        // Trigger background particle update
         window.dispatchEvent(new Event('themeChanged'));
     }
 };
