@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elio Jabbour | Robotics Researcher</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1>Elio Jabbour</h1>
+            <h2>PhD Researcher in Robotics & Shared Control</h2>
+            <p>Facilitating human-robot collaboration through predictive control (MPC) and adaptive assistance.</p>
+            <div class="socials">
+                <a href="mailto:eliojabbour98@gmail.com"><i class="fas fa-envelope"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a> <a href="#"><i class="fab fa-github"></i></a>   </div>
+            <a href="#simulation" class="btn">Play the Simulation</a>
+        </div>
+    </header>
+
+    <section id="about" class="container">
+        <h3>About Me</h3>
+        <p>
+            I am a Robotics Engineer specializing in <strong>Human-Robot Interaction (HRI)</strong>. 
+            My PhD work at <strong>Inria</strong> focuses on "MPC-B", a predictive shared control framework that safely blends human inputs with autonomous assistance.
+            I solve problems where robots must be compliant collaborators, not just automated machines.
+        </p>
+    </section>
+
+    <section id="simulation" class="container">
+        <h3>Interactive Demo: Linear vs. MPC</h3>
+        <p>Experience the difference between standard Linear Blending and my MPC-B framework. <br>
+           <strong>Goal:</strong> Drag the "Human Input" (Blue Dot) to move the Robot (Red Dot) towards the Target (Green). Try to push the robot into the walls!</p>
+        
+        <div class="game-controls">
+            <button onclick="setMode('linear')" class="mode-btn active" id="btn-linear">Mode: Linear Blending</button>
+            <button onclick="setMode('mpc')" class="mode-btn" id="btn-mpc">Mode: MPC (Predictive Safety)</button>
+        </div>
+
+        <div id="canvas-container">
+            <canvas id="simCanvas" width="800" height="400"></canvas>
+            <div id="status">Safety Status: <span id="safety-text">Safe</span></div>
+        </div>
+        
+        <div class="explanation">
+            <h4>What is happening?</h4>
+            <ul id="linear-desc">
+                <li><strong>Linear Blending:</strong> The robot naively averages your input with the assistance. If you push towards a wall, it might crash (Constraint Violation). It reacts late and moves jerkily.</li>
+            </ul>
+            <ul id="mpc-desc" style="display:none;">
+                <li><strong>MPC-B (My Thesis):</strong> The robot <em>predicts</em> future collisions. Even if you push hard towards the wall, it smoothly decelerates and stops exactly at the limit. It optimizes for safety and smoothness in real-time.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="cv" class="container">
+        <h3>Experience Timeline</h3>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="date">Oct 2022 - Present</div>
+                <div class="content">
+                    <h4>PhD Researcher in Robotics</h4>
+                    <span class="company">Inria / University of Bordeaux</span>
+                    <p>Developing MPC-B framework for Franka Panda robots. Integrating QP solvers and Adaptive Kalman Filtering to improve teleoperation safety by 60%.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="date">2022</div>
+                <div class="content">
+                    <h4>MSc in Robotics</h4>
+                    <span class="company">University of Montpellier</span>
+                    <p>Specialization in Control and Robotics.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="date">2020 - 2021</div>
+                <div class="content">
+                    <h4>Marine Robotics Engineer</h4>
+                    <span class="company">Project ALYSSA (Beirut)</span>
+                    <p>Designed a 5-DOF ROV. Validated hydrodynamics via ANSYS Fluent and structural integrity via FEA.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Elio Jabbour. Built with simple code.</p>
+    </footer>
+
+    <script src="simulation.js"></script>
+</body>
+</html>
