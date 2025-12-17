@@ -139,18 +139,20 @@ body {
     flex-direction: column;
     align-items: flex-end;
     gap: 4px;
+    position: relative;
+    z-index: 2000; /* FORCE TO FRONT */
 }
 .theme-label { font-size: 0.7rem; color: var(--text-muted); font-family: 'Roboto Mono'; text-transform: uppercase; }
 .theme-dots { display: flex; gap: 8px; }
 .theme-dot {
-    width: 20px; /* INCREASED SIZE FOR CLICKABILITY */
+    width: 20px; 
     height: 20px; 
     border-radius: 50%; 
     border: 2px solid rgba(255,255,255,0.2); 
     cursor: pointer; 
     transition: 0.2s;
     position: relative;
-    z-index: 1001; /* Extra layer of safety */
+    z-index: 2001; /* Extra layer of safety */
 }
 .theme-dot:hover { transform: scale(1.2); border-color: white; }
 /* Dot Colors matching themes */

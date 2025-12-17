@@ -72,26 +72,5 @@ const appNav = {
         
         // Trigger background particle update
         window.dispatchEvent(new Event('themeChanged'));
-    },
-
-    /**
-     * Initialize event listeners for theme switcher
-     * This handles the click events in JS instead of HTML for robustness
-     */
-    initThemeSwitcher: function() {
-        const themeDots = document.querySelectorAll('.theme-dot');
-        themeDots.forEach(dot => {
-            dot.addEventListener('click', (e) => {
-                const theme = dot.getAttribute('data-theme');
-                if (theme) {
-                    this.setTheme(theme);
-                }
-            });
-        });
     }
 };
-
-// Initialize listeners when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    appNav.initThemeSwitcher();
-});
