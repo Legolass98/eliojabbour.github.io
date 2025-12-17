@@ -3,93 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elio Jabbour | Robotics Researcher</title>
+    <title>Elio Jabbour | Shared Control & Robotics</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;500;700&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <header>
-        <div class="container">
-            <h1>Elio Jabbour</h1>
-            <h2>PhD Researcher in Robotics & Shared Control</h2>
-            <p>Facilitating human-robot collaboration through predictive control (MPC) and adaptive assistance.</p>
-            <div class="socials">
-                <a href="mailto:eliojabbour98@gmail.com"><i class="fas fa-envelope"></i></a>
-                <a href="#"><i class="fab fa-linkedin"></i></a> <a href="#"><i class="fab fa-github"></i></a>   </div>
-            <a href="#simulation" class="btn">Play the Simulation</a>
+    <!-- Dynamic Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="glass-nav">
+        <div class="logo">EJ.<span class="highlight">Robotics</span></div>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#simulation">The Lab (Demo)</a></li>
+            <li><a href="#timeline">Timeline</a></li>
+            <li><a href="#contact" class="cta-btn">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1 class="fade-in-up">Elio Jabbour</h1>
+            <h2 class="fade-in-up delay-1">Ph.D. in Robotics & Shared Control</h2>
+            <p class="fade-in-up delay-2">
+                Bridging the gap between Human Intent and Robot Autonomy using 
+                <span class="highlight">Model Predictive Control (MPC)</span>.
+            </p>
+            <div class="hero-btns fade-in-up delay-3">
+                <a href="#simulation" class="btn primary-btn"><i class="fas fa-gamepad"></i> Try the Simulation</a>
+                <a href="#timeline" class="btn secondary-btn">View Journey</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>Scroll</span>
+            <div class="arrow"></div>
         </div>
     </header>
 
-    <section id="about" class="container">
-        <h3>About Me</h3>
-        <p>
-            I am a Robotics Engineer specializing in <strong>Human-Robot Interaction (HRI)</strong>. 
-            My PhD work at <strong>Inria</strong> focuses on "MPC-B", a predictive shared control framework that safely blends human inputs with autonomous assistance.
-            I solve problems where robots must be compliant collaborators, not just automated machines.
-        </p>
-    </section>
-
-    <section id="simulation" class="container">
-        <h3>Interactive Demo: Linear vs. MPC</h3>
-        <p>Experience the difference between standard Linear Blending and my MPC-B framework. <br>
-           <strong>Goal:</strong> Drag the "Human Input" (Blue Dot) to move the Robot (Red Dot) towards the Target (Green). Try to push the robot into the walls!</p>
-        
-        <div class="game-controls">
-            <button onclick="setMode('linear')" class="mode-btn active" id="btn-linear">Mode: Linear Blending</button>
-            <button onclick="setMode('mpc')" class="mode-btn" id="btn-mpc">Mode: MPC (Predictive Safety)</button>
+    <!-- About Section -->
+    <section id="about" class="container reveal">
+        <div class="section-title">
+            <h3>System Profile</h3>
+            <div class="line"></div>
         </div>
-
-        <div id="canvas-container">
-            <canvas id="simCanvas" width="800" height="400"></canvas>
-            <div id="status">Safety Status: <span id="safety-text">Safe</span></div>
-        </div>
-        
-        <div class="explanation">
-            <h4>What is happening?</h4>
-            <ul id="linear-desc">
-                <li><strong>Linear Blending:</strong> The robot naively averages your input with the assistance. If you push towards a wall, it might crash (Constraint Violation). It reacts late and moves jerkily.</li>
-            </ul>
-            <ul id="mpc-desc" style="display:none;">
-                <li><strong>MPC-B (My Thesis):</strong> The robot <em>predicts</em> future collisions. Even if you push hard towards the wall, it smoothly decelerates and stops exactly at the limit. It optimizes for safety and smoothness in real-time.</li>
-            </ul>
+        <div class="about-grid">
+            <div class="card glass-card">
+                <i class="fas fa-brain icon"></i>
+                <h4>Shared Control</h4>
+                <p>Developing "MPC-B" frameworks that blend human inputs with autonomous safety constraints seamlessly.</p>
+            </div>
+            <div class="card glass-card">
+                <i class="fas fa-robot icon"></i>
+                <h4>HRI</h4>
+                <p>Specialized in physical Human-Robot Interaction using Franka Emika Panda & Omega haptic devices.</p>
+            </div>
+            <div class="card glass-card">
+                <i class="fas fa-code icon"></i>
+                <h4>Full Stack</h4>
+                <p>From C++ and ROS controllers (backend) to data visualization and adaptive filtering.</p>
+            </div>
         </div>
     </section>
 
-    <section id="cv" class="container">
-        <h3>Experience Timeline</h3>
-        <div class="timeline">
-            <div class="timeline-item">
-                <div class="date">Oct 2022 - Present</div>
-                <div class="content">
-                    <h4>PhD Researcher in Robotics</h4>
-                    <span class="company">Inria / University of Bordeaux</span>
-                    <p>Developing MPC-B framework for Franka Panda robots. Integrating QP solvers and Adaptive Kalman Filtering to improve teleoperation safety by 60%.</p>
+    <!-- Interactive Simulation Section -->
+    <section id="simulation" class="container reveal">
+        <div class="section-title">
+            <h3>Interactive Research Demo</h3>
+            <p class="subtitle">Linear Blending vs. MPC-B (My Thesis)</p>
+        </div>
+
+        <div class="sim-wrapper glass-panel">
+            <div class="sim-controls">
+                <div class="control-group">
+                    <label>Control Strategy</label>
+                    <div class="toggle-switch">
+                        <button onclick="setMode('linear')" id="btn-linear" class="active">Linear (Naive)</button>
+                        <button onclick="setMode('mpc')" id="btn-mpc">MPC (Proposed)</button>
+                    </div>
+                </div>
+                <div class="stats">
+                    <div class="stat-box">
+                        <span class="label">Safety Score</span>
+                        <span id="score-val" class="value">100%</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="label">Status</span>
+                        <span id="safety-status" class="value safe">SAFE</span>
+                    </div>
+                </div>
+                <div class="explanation-box">
+                    <p id="sim-desc">
+                        <i class="fas fa-info-circle"></i> 
+                        <strong>Linear Mode:</strong> The robot blindly follows the average of your input and the target. Drag the <strong>Blue Circle</strong> fast towards a wall—the robot will crash.
+                    </p>
                 </div>
             </div>
-            <div class="timeline-item">
-                <div class="date">2022</div>
-                <div class="content">
+            
+            <div class="canvas-container">
+                <canvas id="simCanvas"></canvas>
+                <div class="overlay-instruction">Drag the Blue Dot to Move</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section id="timeline" class="container reveal">
+        <div class="section-title">
+            <h3>Trajectory Log</h3>
+            <div class="line"></div>
+        </div>
+        <div class="timeline">
+            
+            <!-- Item 1 -->
+            <div class="timeline-item left">
+                <div class="content glass-card">
+                    <div class="date">Oct 2022 - Present</div>
+                    <h4>PhD Researcher in Robotics</h4>
+                    <span class="company">Inria / Univ. of Bordeaux</span>
+                    <p>Designed the MPC-B framework for Franka Panda. Improved teleoperation safety by 60% using QP solvers and Adaptive Kalman Filtering.</p>
+                    <div class="tags">
+                        <span>C++</span> <span>ROS</span> <span>MPC</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="timeline-item right">
+                <div class="content glass-card">
+                    <div class="date">2022</div>
                     <h4>MSc in Robotics</h4>
                     <span class="company">University of Montpellier</span>
-                    <p>Specialization in Control and Robotics.</p>
+                    <p>Specialization in Control Theory and Robotics. Graduated with Honors.</p>
+                    <div class="tags">
+                        <span>Control Theory</span> <span>Python</span>
+                    </div>
                 </div>
             </div>
-            <div class="timeline-item">
-                <div class="date">2020 - 2021</div>
-                <div class="content">
+
+            <!-- Item 3 -->
+            <div class="timeline-item left">
+                <div class="content glass-card">
+                    <div class="date">2020 - 2021</div>
                     <h4>Marine Robotics Engineer</h4>
-                    <span class="company">Project ALYSSA (Beirut)</span>
+                    <span class="company">Project ALYSSA</span>
                     <p>Designed a 5-DOF ROV. Validated hydrodynamics via ANSYS Fluent and structural integrity via FEA.</p>
+                    <div class="tags">
+                        <span>SolidWorks</span> <span>ANSYS</span> <span>Mech. Design</span>
+                    </div>
                 </div>
             </div>
+
         </div>
     </section>
 
-    <footer>
-        <p>&copy; 2025 Elio Jabbour. Built with simple code.</p>
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <h2>Let's Collaborate</h2>
+            <div class="social-links">
+                <a href="mailto:eliojabbour98@gmail.com"><i class="fas fa-envelope"></i></a>
+                <a href="https://linkedin.com/in/elio-jabbour" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/Legolass98" target="_blank"><i class="fab fa-github"></i></a>
+            </div>
+            <p>&copy; 2025 Elio Jabbour. Engineered with <i class="fas fa-heart" style="color:#00f2ff"></i> and Code.</p>
+        </div>
     </footer>
 
-    <script src="simulation.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
