@@ -56,24 +56,56 @@ const robotSim = (function() {
         state.humanInput = { x: simWidth * 0.15, y: simHeight * 0.5 };
         state.robot = { x: simWidth * 0.15, y: simHeight * 0.5, vx: 0, vy: 0, angle: 0 };
         // Define safe zone (walls)
-        state.walls = { x_min: 60, x_max: simWidth - 60, y_min: 60, y_max: simHeight - 60 };
+        // Use relative percentages for mobile responsiveness
+        const pad = Math.min(60, simWidth * 0.1); 
+        state.walls = { x_min: pad, x_max: simWidth - pad, y_min: pad, y_max: simHeight - pad };
     }
 
     /* --- INPUT HANDLING --- */
     function getInputPos(e) {
         const rect = simCanvas.getBoundingClientRect();
+        // Handle both mouse and touch events
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        
         return {
-            x: (e.clientX || e.touches[0].clientX) - rect.left,
-            y: (e.clientY || e.touches[0].clientY) - rect.top
+            x: clientX - rect.left,
+            y: clientY - rect.top
         };
     }
 
-    simCanvas.addEventListener('mousedown', (e) => { state.isDragging = true; let p = getInputPos(e); state.humanInput = p; });
-    simCanvas.addEventListener('mousemove', (e) => { if(state.isDragging) { let p = getInputPos(e); state.humanInput = p; } });
+    // Mouse Events
+    simCanvas.addEventListener('mousedown', (e) => { 
+        state.isDragging = true; 
+        let p = getInputPos(e); 
+        state.humanInput = p; 
+    });
+    simCanvas.addEventListener('mousemove', (e) => { 
+        if(state.isDragging) { 
+            let p = getInputPos(e); 
+            state.humanInput = p; 
+        } 
+    });
     simCanvas.addEventListener('mouseup', () => { state.isDragging = false; });
-    // Touch support for mobile
-    simCanvas.addEventListener('touchstart', (e) => { state.isDragging = true; let p = getInputPos(e); state.humanInput = p; e.preventDefault(); }, {passive: false});
-    simCanvas.addEventListener('touchmove', (e) => { if(state.isDragging) { let p = getInputPos(e); state.humanInput = p; e.preventDefault(); } }, {passive: false});
+    simCanvas.addEventListener('mouseleave', () => { state.isDragging = false; }); // Safety
+
+    // Touch Events (Mobile) - Critical fixes for scrolling
+    simCanvas.addEventListener('touchstart', (e) => { 
+        state.isDragging = true; 
+        let p = getInputPos(e); 
+        state.humanInput = p; 
+        e.preventDefault(); // Stop screen from scrolling when touching canvas
+    }, {passive: false});
+
+    simCanvas.addEventListener('touchmove', (e) => { 
+        if(state.isDragging) { 
+            let p = getInputPos(e); 
+            state.humanInput = p; 
+            e.preventDefault(); // Stop screen from scrolling
+        } 
+    }, {passive: false});
+
+    simCanvas.addEventListener('touchend', () => { state.isDragging = false; });
 
     /* --- MODE SWITCHING --- */
     function setMode(newMode) {
@@ -265,6 +297,11 @@ const robotSim = (function() {
 
     // Public API
     window.addEventListener('resize', resize);
+    // Listen for orientation change on mobile
+    window.addEventListener('orientationchange', () => {
+        setTimeout(resize, 100); 
+    });
+    
     resize();
     update();
 
