@@ -1,6 +1,6 @@
 /**
  * [MODULE: NAVIGATION & RENDERER]
- * Handles tab switching AND dynamic content generation.
+ * Updated to handle 3D Model viewing logic.
  */
 
 const appNav = {
@@ -27,7 +27,7 @@ const appNav = {
         }
     },
 
-    // --- 2. Project Rendering Logic (The "Modular" Part) ---
+    // --- 2. Project Rendering Logic ---
     openProject: function(projectId) {
         // A. Switch to Lab Tab
         this.switchTab('simulation');
@@ -42,18 +42,15 @@ const appNav = {
         container.style.display = 'block';
 
         // D. Inject Content (Dynamic Rendering)
-        // 1. Title & Header
         document.getElementById('dp-title').innerText = data.title;
         document.getElementById('dp-subtitle').innerText = data.subtitle;
         
-        // 2. Tags
         const tagContainer = document.getElementById('dp-tags');
         tagContainer.innerHTML = '';
         data.tags.forEach(tag => {
             tagContainer.innerHTML += `<span>${tag}</span>`;
         });
 
-        // 3. Description & Details
         document.getElementById('dp-description').innerHTML = data.description;
         
         const listContainer = document.getElementById('dp-details');
@@ -62,7 +59,7 @@ const appNav = {
             listContainer.innerHTML += `<li>${item}</li>`;
         });
 
-        // E. Handle Simulation (Special Case)
+        // E. Handle MPC Simulation
         const simView = document.getElementById('project-mpc-sim-view');
         if(data.hasSimulation) {
             simView.style.display = 'block';
@@ -71,6 +68,19 @@ const appNav = {
             }
         } else {
             simView.style.display = 'none';
+        }
+
+        // F. Handle 3D Model Viewer (NEW)
+        const modelView = document.getElementById('project-3d-view');
+        if(data.has3DModel && typeof modelViewer !== 'undefined') {
+            modelView.style.display = 'block';
+            // Trigger Load
+            setTimeout(() => {
+                modelViewer.resize();
+                modelViewer.load(data.modelPath);
+            }, 100);
+        } else {
+            modelView.style.display = 'none';
         }
     },
 

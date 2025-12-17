@@ -374,6 +374,10 @@ body {
 
 .canvas-container { position: relative; height: 500px; background: radial-gradient(circle at center, #1a1a2e 0%, #000 100%); }
 
+/* 3D Viewer Specifics */
+#three-container { width: 100%; height: 500px; overflow: hidden; outline: none;}
+#loading-text { pointer-events: none; z-index: 100; text-shadow: 0 0 10px var(--primary); }
+
 .hardware-validation {
     margin-top: 20px;
     padding: 25px;

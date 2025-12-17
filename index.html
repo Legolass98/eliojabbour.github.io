@@ -8,6 +8,11 @@
     <!-- Google Fonts: Rajdhani for Tech, Inter for Academic Text -->
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;500;700&family=Inter:wght@300;400;600&family=Roboto+Mono:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- THREE.JS LIBRARIES (Required for 3D Model) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body data-theme="orbital">
 
@@ -208,7 +213,7 @@
                     <ul id="dp-details" style="margin-top: 20px; padding-left: 20px; color: #ccc;"></ul>
                 </div>
 
-                <!-- Simulation Slot -->
+                <!-- 1. MPC Simulation Slot -->
                 <div id="project-mpc-sim-view" style="display: none; margin-top: 30px;">
                     <div class="sim-wrapper glass-panel">
                         <div class="sim-controls">
@@ -232,6 +237,23 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- 2. 3D Model Viewer Slot (NEW) -->
+                <div id="project-3d-view" style="display: none; margin-top: 30px;">
+                    <div class="sim-wrapper glass-panel">
+                        <div class="sim-controls">
+                            <div class="control-group">
+                                <label>3D Interactive View</label>
+                                <span style="font-family:'Roboto Mono'; font-size: 0.8rem; color: #888;">Left Click: Rotate | Scroll: Zoom</span>
+                            </div>
+                        </div>
+                        <div id="three-container" class="canvas-container" style="background: linear-gradient(to bottom, #111, #0b1015);">
+                            <!-- Three.js Canvas Injected Here -->
+                             <div id="loading-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--primary); font-family: 'Rajdhani';">LOADING MODEL...</div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
         </section>
@@ -342,6 +364,8 @@
 
     <!-- LOAD SCRIPTS (Order matters) -->
     <script src="js/project_data.js"></script> 
+    <!-- Load 3D Viewer Before Navigation -->
+    <script src="js/model_viewer.js"></script>
     <script src="js/navigation.js"></script>    
     <script src="js/background.js"></script>
     <script src="js/simulation.js"></script>

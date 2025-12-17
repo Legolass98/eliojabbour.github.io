@@ -1,12 +1,10 @@
 /**
  * [MODULE: PROJECT DATA]
- * This file contains the content for all portfolio projects.
- * EDIT THIS FILE to change text, bullet points, or titles.
- * This separates "Content" from "Structure" (Modularity).
+ * Updated to include 3D Model paths.
  */
 
 const projectDatabase = {
-    // 1. PhD Thesis (The Core Project)
+    // 1. PhD Thesis
     'mpc': {
         title: "PhD Thesis: MPC-B Framework",
         subtitle: "Shared-Autonomy Control for Improving Human-Robot Collaboration",
@@ -28,7 +26,8 @@ const projectDatabase = {
             "<strong>User Study Results:</strong> N=20 participants. Demonstrated 60% reduction in collision risks and 50% faster task completion compared to linear teleoperation.",
             "<strong>Adaptive Assistance:</strong> Integrated Adaptive Kalman Filtering to estimate human intent and adjust assistance levels dynamically."
         ],
-        hasSimulation: true // Triggers the physics engine
+        hasSimulation: true,
+        has3DModel: false
     },
 
     // 2. Hades (Underwater Robot)
@@ -49,10 +48,11 @@ const projectDatabase = {
             "<strong>Mechanism:</strong> Designed a waterproof 12-thruster configuration for high-maneuverability and redundancy.",
             "<strong>Redundancy Analysis:</strong> Analyzed 6-DOF actuation capabilities across various body shapes to ensure fault tolerance."
         ],
-        hasSimulation: false
+        hasSimulation: false,
+        has3DModel: false
     },
 
-    // 3. Alyssa (Marine ROV)
+    // 3. Alyssa (Marine ROV) - UPDATED WITH 3D MODEL
     'alyssa': {
         title: "Project ALYSSA",
         subtitle: "5-DOF Inspection Class ROV",
@@ -68,7 +68,9 @@ const projectDatabase = {
             "<strong>Hydrodynamics:</strong> Optimized an ellipsoid hull shape to minimize drag coefficient (Cd) using CFD simulations.",
             "<strong>Propulsion:</strong> Designed a 6-thruster vector configuration for 5-DOF independent control."
         ],
-        hasSimulation: false
+        hasSimulation: false,
+        has3DModel: true,
+        modelPath: "models/alyssa.glb"
     },
 
     // 4. Haptics (Internship)
@@ -85,6 +87,7 @@ const projectDatabase = {
             "<strong>Intent Estimation:</strong> Developed algorithms to predict the user's next target based on gaze and initial hand motion.",
             "<strong>Task Execution:</strong> Validated the system on complex pick-and-place assembly scenarios using a Force Dimension Omega.7 haptic device."
         ],
-        hasSimulation: false
+        hasSimulation: false,
+        has3DModel: false
     }
 };
