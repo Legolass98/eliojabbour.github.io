@@ -1,6 +1,6 @@
 /**
  * [MODULE: 3D MODEL VIEWER]
- * Updated with robust error reporting.
+ * Updated with "Fit-To-Screen" camera logic and robustness fixes.
  */
 
 const modelViewer = (function() {
@@ -21,10 +21,10 @@ const modelViewer = (function() {
         // 1. Scene
         scene = new THREE.Scene();
 
-        // 2. Camera
+        // 2. Camera (Initial temporary position)
         const aspect = container.clientWidth / container.clientHeight;
         camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1000);
-        camera.position.set(2, 2, 4); 
+        camera.position.set(0, 0, 10); 
 
         // 3. Renderer
         renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -40,10 +40,10 @@ const modelViewer = (function() {
         controls.autoRotateSpeed = 1.0;
 
         // 5. Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
         scene.add(ambientLight);
 
-        const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
         dirLight.position.set(5, 10, 7);
         scene.add(dirLight);
 
@@ -53,7 +53,7 @@ const modelViewer = (function() {
 
         // 6. Grid Helper
         const gridHelper = new THREE.GridHelper(20, 20, 0x00f2ff, 0x2d5b6e);
-        gridHelper.position.y = -0.5; 
+        gridHelper.position.y = -2; // Push grid down slightly
         gridHelper.material.opacity = 0.2;
         gridHelper.material.transparent = true;
         scene.add(gridHelper);
@@ -84,6 +84,39 @@ const modelViewer = (function() {
         if(renderer && scene && camera) renderer.render(scene, camera);
     }
 
+    // --- NEW: Smart Camera Fitting ---
+    function fitCameraToObject(object) {
+        const box = new THREE.Box3().setFromObject(object);
+        
+        // Safety check: if box is empty or infinite (no geometry found)
+        if (box.isEmpty()) {
+            console.warn("Model has no geometry or bounds. Using default view.");
+            return;
+        }
+
+        const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3());
+
+        // Get the max side of the bounding box (width, height, or depth)
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const fov = camera.fov * (Math.PI / 180);
+        let cameraZ = Math.abs(maxDim / 2 * Math.tan(fov * 2)); // Basic trigonometry to fit object
+
+        // Multiplier to zoom out slightly (1.5 = tight, 3 = far)
+        cameraZ *= 2.0; 
+
+        // Update Camera Position
+        const direction = new THREE.Vector3(1, 1, 1).normalize(); // View from corner
+        const position = direction.multiplyScalar(cameraZ).add(center);
+        
+        camera.position.copy(position);
+        camera.lookAt(center);
+        
+        // Update Controls Target to the center of the model
+        controls.target.copy(center);
+        controls.update();
+    }
+
     // Public: Load a specific model
     function loadModel(path) {
         if (!isInitialized) init();
@@ -91,7 +124,7 @@ const modelViewer = (function() {
         const loadingText = document.getElementById('loading-text');
         if(loadingText) {
             loadingText.style.display = 'block';
-            loadingText.innerText = "LOADING: " + path;
+            loadingText.innerText = "LOADING...";
             loadingText.style.color = "var(--primary)";
         }
 
@@ -106,46 +139,24 @@ const modelViewer = (function() {
             path,
             (gltf) => {
                 currentModel = gltf.scene;
-                
-                // Auto-center and scale
-                const box = new THREE.Box3().setFromObject(currentModel);
-                const size = box.getSize(new THREE.Vector3());
-                
-                // Center
-                const center = box.getCenter(new THREE.Vector3());
-                currentModel.position.x += (currentModel.position.x - center.x);
-                currentModel.position.y += (currentModel.position.y - center.y);
-                currentModel.position.z += (currentModel.position.z - center.z);
-                
-                // Scale
-                const maxDim = Math.max(size.x, size.y, size.z);
-                const scale = 2 / maxDim; 
-                currentModel.scale.set(scale, scale, scale);
-
                 scene.add(currentModel);
                 
+                // FIT CAMERA
+                try {
+                    fitCameraToObject(currentModel);
+                } catch (e) {
+                    console.error("Error fitting camera:", e);
+                }
+                
                 if(loadingText) loadingText.style.display = 'none';
-                controls.reset();
             },
             (xhr) => {
-                // Progress
                 if(loadingText) loadingText.innerText = Math.round(xhr.loaded / xhr.total * 100) + '%';
             },
             (error) => {
-                console.error('Detailed Model Error:', error);
-                
-                let errorMsg = "ERROR LOADING MODEL";
-                
-                // Try to detect the type of error for the user
-                if(error.target && error.target.status) {
-                    if(error.target.status === 404) errorMsg = "FILE NOT FOUND (404)";
-                    else errorMsg = `HTTP ERROR ${error.target.status}`;
-                } else if(error instanceof SyntaxError) {
-                    errorMsg = "FILE CORRUPTED (GIT LFS/TEXT ISSUE)";
-                }
-
+                console.error('Model Error:', error);
                 if(loadingText) {
-                    loadingText.innerText = errorMsg;
+                    loadingText.innerText = "ERROR LOADING MODEL";
                     loadingText.style.color = "#ff4757";
                 }
             }
