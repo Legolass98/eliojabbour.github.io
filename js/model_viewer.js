@@ -1,6 +1,6 @@
 /**
  * [MODULE: 3D MODEL VIEWER]
- * Updated with "Fit-To-Screen" camera logic and robustness fixes.
+ * Updated with FIXED "Fit-To-Screen" math.
  */
 
 const modelViewer = (function() {
@@ -23,7 +23,7 @@ const modelViewer = (function() {
 
         // 2. Camera (Initial temporary position)
         const aspect = container.clientWidth / container.clientHeight;
-        camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1000);
+        camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 10000); // Increased far plane
         camera.position.set(0, 0, 10); 
 
         // 3. Renderer
@@ -53,7 +53,7 @@ const modelViewer = (function() {
 
         // 6. Grid Helper
         const gridHelper = new THREE.GridHelper(20, 20, 0x00f2ff, 0x2d5b6e);
-        gridHelper.position.y = -2; // Push grid down slightly
+        gridHelper.position.y = -2; 
         gridHelper.material.opacity = 0.2;
         gridHelper.material.transparent = true;
         scene.add(gridHelper);
@@ -84,35 +84,46 @@ const modelViewer = (function() {
         if(renderer && scene && camera) renderer.render(scene, camera);
     }
 
-    // --- NEW: Smart Camera Fitting ---
+    // --- MATH FIX: Smart Camera Fitting ---
     function fitCameraToObject(object) {
         const box = new THREE.Box3().setFromObject(object);
         
-        // Safety check: if box is empty or infinite (no geometry found)
         if (box.isEmpty()) {
-            console.warn("Model has no geometry or bounds. Using default view.");
+            console.warn("Model has no geometry bounds. Camera unchanged.");
             return;
         }
 
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
 
-        // Get the max side of the bounding box (width, height, or depth)
+        // Get the max dimension
         const maxDim = Math.max(size.x, size.y, size.z);
+        
+        // Convert FOV to radians
         const fov = camera.fov * (Math.PI / 180);
-        let cameraZ = Math.abs(maxDim / 2 * Math.tan(fov * 2)); // Basic trigonometry to fit object
+        
+        // Calculate distance: (ObjectSize / 2) / tan(FOV / 2)
+        let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
 
-        // Multiplier to zoom out slightly (1.5 = tight, 3 = far)
-        cameraZ *= 2.0; 
+        // Add a safety buffer (1.5x zoom out)
+        cameraZ *= 1.5;
 
-        // Update Camera Position
-        const direction = new THREE.Vector3(1, 1, 1).normalize(); // View from corner
+        // Safety fallback if calculation fails
+        if (!cameraZ || cameraZ === Infinity) cameraZ = 5;
+
+        // Position camera along a diagonal vector
+        const direction = new THREE.Vector3(1, 1, 1).normalize(); 
         const position = direction.multiplyScalar(cameraZ).add(center);
         
         camera.position.copy(position);
         camera.lookAt(center);
         
-        // Update Controls Target to the center of the model
+        // Update clipping planes to ensure model isn't cut off
+        camera.near = maxDim / 100;
+        camera.far = maxDim * 100;
+        camera.updateProjectionMatrix();
+        
+        // Center the orbit controls
         controls.target.copy(center);
         controls.update();
     }
@@ -145,7 +156,7 @@ const modelViewer = (function() {
                 try {
                     fitCameraToObject(currentModel);
                 } catch (e) {
-                    console.error("Error fitting camera:", e);
+                    console.error("Camera Fit Error:", e);
                 }
                 
                 if(loadingText) loadingText.style.display = 'none';
