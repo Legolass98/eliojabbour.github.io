@@ -1,6 +1,6 @@
 /**
  * [MODULE: PROJECT DATA]
- * Updated to include 3D Model paths.
+ * Updated with the specific path for the Alyssa GLB model.
  */
 
 const projectDatabase = {
@@ -52,7 +52,7 @@ const projectDatabase = {
         has3DModel: false
     },
 
-    // 3. Alyssa (Marine ROV) - UPDATED WITH 3D MODEL
+    // 3. Alyssa (Marine ROV) - UPDATED PATH
     'alyssa': {
         title: "Project ALYSSA",
         subtitle: "5-DOF Inspection Class ROV",
@@ -70,7 +70,8 @@ const projectDatabase = {
         ],
         hasSimulation: false,
         has3DModel: true,
-        modelPath: "img\profilepicture\Alyssaglb.glb"
+        // PATH UPDATED: Converted backslashes to forward slashes for web compatibility
+        modelPath: "img/profilepicture/Alyssaglb.glb"
     },
 
     // 4. Haptics (Internship)

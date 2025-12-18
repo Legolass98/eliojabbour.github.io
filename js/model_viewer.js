@@ -1,7 +1,6 @@
 /**
  * [MODULE: 3D MODEL VIEWER]
- * Handles loading GLB/GLTF files using Three.js.
- * Features: Orbit controls, lighting setup, and responsive canvas.
+ * Updated with robust error reporting.
  */
 
 const modelViewer = (function() {
@@ -21,12 +20,11 @@ const modelViewer = (function() {
 
         // 1. Scene
         scene = new THREE.Scene();
-        // scene.background = new THREE.Color(0x0b1015); // Use CSS bg instead for transparency if needed
 
         // 2. Camera
         const aspect = container.clientWidth / container.clientHeight;
         camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1000);
-        camera.position.set(2, 2, 4); // Initial View Position
+        camera.position.set(2, 2, 4); 
 
         // 3. Renderer
         renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -38,7 +36,7 @@ const modelViewer = (function() {
         controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
-        controls.autoRotate = true; // Nice portfolio touch
+        controls.autoRotate = true; 
         controls.autoRotateSpeed = 1.0;
 
         // 5. Lighting
@@ -49,14 +47,13 @@ const modelViewer = (function() {
         dirLight.position.set(5, 10, 7);
         scene.add(dirLight);
 
-        // Optional: Blue/Cyber Rim Light
         const rimLight = new THREE.SpotLight(0x00f2ff, 5);
         rimLight.position.set(-5, 0, -5);
         scene.add(rimLight);
 
-        // 6. Grid Helper (Cyber aesthetic)
+        // 6. Grid Helper
         const gridHelper = new THREE.GridHelper(20, 20, 0x00f2ff, 0x2d5b6e);
-        gridHelper.position.y = -0.5; // Lower slightly
+        gridHelper.position.y = -0.5; 
         gridHelper.material.opacity = 0.2;
         gridHelper.material.transparent = true;
         scene.add(gridHelper);
@@ -92,7 +89,11 @@ const modelViewer = (function() {
         if (!isInitialized) init();
 
         const loadingText = document.getElementById('loading-text');
-        if(loadingText) loadingText.style.display = 'block';
+        if(loadingText) {
+            loadingText.style.display = 'block';
+            loadingText.innerText = "LOADING: " + path;
+            loadingText.style.color = "var(--primary)";
+        }
 
         // Remove old model if exists
         if (currentModel) {
@@ -108,15 +109,15 @@ const modelViewer = (function() {
                 
                 // Auto-center and scale
                 const box = new THREE.Box3().setFromObject(currentModel);
-                const center = box.getCenter(new THREE.Vector3());
                 const size = box.getSize(new THREE.Vector3());
                 
-                // Reset Position to center
+                // Center
+                const center = box.getCenter(new THREE.Vector3());
                 currentModel.position.x += (currentModel.position.x - center.x);
                 currentModel.position.y += (currentModel.position.y - center.y);
                 currentModel.position.z += (currentModel.position.z - center.z);
                 
-                // Scale to fit nicely
+                // Scale
                 const maxDim = Math.max(size.x, size.y, size.z);
                 const scale = 2 / maxDim; 
                 currentModel.scale.set(scale, scale, scale);
@@ -127,12 +128,26 @@ const modelViewer = (function() {
                 controls.reset();
             },
             (xhr) => {
-                // Progress (optional)
-                // console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+                // Progress
+                if(loadingText) loadingText.innerText = Math.round(xhr.loaded / xhr.total * 100) + '%';
             },
             (error) => {
-                console.error('An error happened loading the model:', error);
-                if(loadingText) loadingText.innerText = "ERROR LOADING MODEL";
+                console.error('Detailed Model Error:', error);
+                
+                let errorMsg = "ERROR LOADING MODEL";
+                
+                // Try to detect the type of error for the user
+                if(error.target && error.target.status) {
+                    if(error.target.status === 404) errorMsg = "FILE NOT FOUND (404)";
+                    else errorMsg = `HTTP ERROR ${error.target.status}`;
+                } else if(error instanceof SyntaxError) {
+                    errorMsg = "FILE CORRUPTED (GIT LFS/TEXT ISSUE)";
+                }
+
+                if(loadingText) {
+                    loadingText.innerText = errorMsg;
+                    loadingText.style.color = "#ff4757";
+                }
             }
         );
     }
