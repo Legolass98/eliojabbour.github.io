@@ -1,6 +1,6 @@
 /**
  * [MODULE: 3D MODEL VIEWER]
- * Updated with FIXED "Fit-To-Screen" math.
+ * Reverted to stable scaling/centering logic.
  */
 
 const modelViewer = (function() {
@@ -21,10 +21,10 @@ const modelViewer = (function() {
         // 1. Scene
         scene = new THREE.Scene();
 
-        // 2. Camera (Initial temporary position)
+        // 2. Camera
         const aspect = container.clientWidth / container.clientHeight;
-        camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 10000); // Increased far plane
-        camera.position.set(0, 0, 10); 
+        camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1000);
+        camera.position.set(2, 2, 5); // Standard ISO view
 
         // 3. Renderer
         renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -40,10 +40,10 @@ const modelViewer = (function() {
         controls.autoRotateSpeed = 1.0;
 
         // 5. Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
         scene.add(ambientLight);
 
-        const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1);
         dirLight.position.set(5, 10, 7);
         scene.add(dirLight);
 
@@ -84,50 +84,6 @@ const modelViewer = (function() {
         if(renderer && scene && camera) renderer.render(scene, camera);
     }
 
-    // --- MATH FIX: Smart Camera Fitting ---
-    function fitCameraToObject(object) {
-        const box = new THREE.Box3().setFromObject(object);
-        
-        if (box.isEmpty()) {
-            console.warn("Model has no geometry bounds. Camera unchanged.");
-            return;
-        }
-
-        const center = box.getCenter(new THREE.Vector3());
-        const size = box.getSize(new THREE.Vector3());
-
-        // Get the max dimension
-        const maxDim = Math.max(size.x, size.y, size.z);
-        
-        // Convert FOV to radians
-        const fov = camera.fov * (Math.PI / 180);
-        
-        // Calculate distance: (ObjectSize / 2) / tan(FOV / 2)
-        let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
-
-        // Add a safety buffer (1.5x zoom out)
-        cameraZ *= 1.5;
-
-        // Safety fallback if calculation fails
-        if (!cameraZ || cameraZ === Infinity) cameraZ = 5;
-
-        // Position camera along a diagonal vector
-        const direction = new THREE.Vector3(1, 1, 1).normalize(); 
-        const position = direction.multiplyScalar(cameraZ).add(center);
-        
-        camera.position.copy(position);
-        camera.lookAt(center);
-        
-        // Update clipping planes to ensure model isn't cut off
-        camera.near = maxDim / 100;
-        camera.far = maxDim * 100;
-        camera.updateProjectionMatrix();
-        
-        // Center the orbit controls
-        controls.target.copy(center);
-        controls.update();
-    }
-
     // Public: Load a specific model
     function loadModel(path) {
         if (!isInitialized) init();
@@ -135,7 +91,7 @@ const modelViewer = (function() {
         const loadingText = document.getElementById('loading-text');
         if(loadingText) {
             loadingText.style.display = 'block';
-            loadingText.innerText = "LOADING...";
+            loadingText.innerText = "LOADING: " + path;
             loadingText.style.color = "var(--primary)";
         }
 
@@ -150,14 +106,30 @@ const modelViewer = (function() {
             path,
             (gltf) => {
                 currentModel = gltf.scene;
-                scene.add(currentModel);
                 
-                // FIT CAMERA
-                try {
-                    fitCameraToObject(currentModel);
-                } catch (e) {
-                    console.error("Camera Fit Error:", e);
+                // --- STABLE CENTER & SCALE LOGIC ---
+                // This ensures the model is visually centered at 0,0,0
+                // regardless of where it was placed in the CAD software.
+                
+                const box = new THREE.Box3().setFromObject(currentModel);
+                const size = box.getSize(new THREE.Vector3());
+                const center = box.getCenter(new THREE.Vector3());
+
+                // 1. Shift the model so its geometric center is at (0,0,0)
+                currentModel.position.x -= center.x;
+                currentModel.position.y -= center.y;
+                currentModel.position.z -= center.z;
+                
+                // 2. Scale it to a consistent size (e.g., 4 units)
+                const maxDim = Math.max(size.x, size.y, size.z);
+                if (maxDim > 0) {
+                    const targetSize = 4; 
+                    const scale = targetSize / maxDim; 
+                    currentModel.scale.set(scale, scale, scale);
                 }
+
+                scene.add(currentModel);
+                controls.reset();
                 
                 if(loadingText) loadingText.style.display = 'none';
             },
