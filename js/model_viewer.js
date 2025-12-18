@@ -1,6 +1,6 @@
 /**
  * [MODULE: 3D MODEL VIEWER]
- * Updated with "Fit-To-Screen" camera logic.
+ * Updated with robust error reporting.
  */
 
 const modelViewer = (function() {
@@ -21,10 +21,10 @@ const modelViewer = (function() {
         // 1. Scene
         scene = new THREE.Scene();
 
-        // 2. Camera (Initial temporary position)
+        // 2. Camera
         const aspect = container.clientWidth / container.clientHeight;
         camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1000);
-        camera.position.set(0, 0, 10); 
+        camera.position.set(2, 2, 4); 
 
         // 3. Renderer
         renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -40,10 +40,10 @@ const modelViewer = (function() {
         controls.autoRotateSpeed = 1.0;
 
         // 5. Lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
         scene.add(ambientLight);
 
-        const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1);
         dirLight.position.set(5, 10, 7);
         scene.add(dirLight);
 
@@ -53,7 +53,7 @@ const modelViewer = (function() {
 
         // 6. Grid Helper
         const gridHelper = new THREE.GridHelper(20, 20, 0x00f2ff, 0x2d5b6e);
-        gridHelper.position.y = -2; // Push grid down slightly
+        gridHelper.position.y = -0.5; 
         gridHelper.material.opacity = 0.2;
         gridHelper.material.transparent = true;
         scene.add(gridHelper);
@@ -84,32 +84,6 @@ const modelViewer = (function() {
         if(renderer && scene && camera) renderer.render(scene, camera);
     }
 
-    // --- NEW: Smart Camera Fitting ---
-    function fitCameraToObject(object) {
-        const box = new THREE.Box3().setFromObject(object);
-        const center = box.getCenter(new THREE.Vector3());
-        const size = box.getSize(new THREE.Vector3());
-
-        // Get the max side of the bounding box (width, height, or depth)
-        const maxDim = Math.max(size.x, size.y, size.z);
-        const fov = camera.fov * (Math.PI / 180);
-        let cameraZ = Math.abs(maxDim / 2 * Math.tan(fov * 2)); // Basic trigonometry to fit object
-
-        // Multiplier to zoom out slightly (1.5 = tight, 3 = far)
-        cameraZ *= 2.0; 
-
-        // Update Camera Position
-        const direction = new THREE.Vector3(1, 1, 1).normalize(); // View from corner
-        const position = direction.multiplyScalar(cameraZ).add(center);
-        
-        camera.position.copy(position);
-        camera.lookAt(center);
-        
-        // Update Controls Target to the center of the model
-        controls.target.copy(center);
-        controls.update();
-    }
-
     // Public: Load a specific model
     function loadModel(path) {
         if (!isInitialized) init();
@@ -117,7 +91,7 @@ const modelViewer = (function() {
         const loadingText = document.getElementById('loading-text');
         if(loadingText) {
             loadingText.style.display = 'block';
-            loadingText.innerText = "LOADING...";
+            loadingText.innerText = "LOADING: " + path;
             loadingText.style.color = "var(--primary)";
         }
 
@@ -132,24 +106,55 @@ const modelViewer = (function() {
             path,
             (gltf) => {
                 currentModel = gltf.scene;
-                scene.add(currentModel);
                 
-                // --- DEBUG BOX HELPER (Optional: Helps see if box is huge) ---
-                // const boxHelper = new THREE.BoxHelper(currentModel, 0xff0000);
-                // scene.add(boxHelper);
+                // --- AUTO-CENTER & SCALE LOGIC ---
+                const box = new THREE.Box3().setFromObject(currentModel);
+                const size = box.getSize(new THREE.Vector3());
+                const center = box.getCenter(new THREE.Vector3());
 
-                // FIT CAMERA
-                fitCameraToObject(currentModel);
+                // 1. Center the model at (0,0,0)
+                currentModel.position.x += (currentModel.position.x - center.x);
+                currentModel.position.y += (currentModel.position.y - center.y);
+                currentModel.position.z += (currentModel.position.z - center.z);
+                
+                // 2. Scale it to a reasonable size (e.g., 2 units max dimension)
+                // This prevents huge models from being too close or tiny ones too far
+                const maxDim = Math.max(size.x, size.y, size.z);
+                const targetSize = 3; // Slightly larger target size
+                const scale = targetSize / maxDim; 
+                currentModel.scale.set(scale, scale, scale);
+
+                // 3. Move Camera to a nice viewing distance
+                // The camera is at (2,2,4) by default. We adjust it based on size.
+                // Reset controls to ensure target is (0,0,0)
+                controls.reset(); 
+                
+                // Optional: Adjust camera distance if needed, but scaling usually solves it.
+                // camera.position.z = maxDim * scale * 2; 
+
+                scene.add(currentModel);
                 
                 if(loadingText) loadingText.style.display = 'none';
             },
             (xhr) => {
+                // Progress
                 if(loadingText) loadingText.innerText = Math.round(xhr.loaded / xhr.total * 100) + '%';
             },
             (error) => {
-                console.error('Model Error:', error);
+                console.error('Detailed Model Error:', error);
+                
+                let errorMsg = "ERROR LOADING MODEL";
+                
+                // Try to detect the type of error for the user
+                if(error.target && error.target.status) {
+                    if(error.target.status === 404) errorMsg = "FILE NOT FOUND (404)";
+                    else errorMsg = `HTTP ERROR ${error.target.status}`;
+                } else if(error instanceof SyntaxError) {
+                    errorMsg = "FILE CORRUPTED (GIT LFS/TEXT ISSUE)";
+                }
+
                 if(loadingText) {
-                    loadingText.innerText = "ERROR LOADING MODEL";
+                    loadingText.innerText = errorMsg;
                     loadingText.style.color = "#ff4757";
                 }
             }
