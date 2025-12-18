@@ -107,25 +107,34 @@ const modelViewer = (function() {
             (gltf) => {
                 currentModel = gltf.scene;
                 
-                // Auto-center and scale
+                // --- AUTO-CENTER & SCALE LOGIC ---
                 const box = new THREE.Box3().setFromObject(currentModel);
                 const size = box.getSize(new THREE.Vector3());
-                
-                // Center
                 const center = box.getCenter(new THREE.Vector3());
+
+                // 1. Center the model at (0,0,0)
                 currentModel.position.x += (currentModel.position.x - center.x);
                 currentModel.position.y += (currentModel.position.y - center.y);
                 currentModel.position.z += (currentModel.position.z - center.z);
                 
-                // Scale
+                // 2. Scale it to a reasonable size (e.g., 2 units max dimension)
+                // This prevents huge models from being too close or tiny ones too far
                 const maxDim = Math.max(size.x, size.y, size.z);
-                const scale = 2 / maxDim; 
+                const targetSize = 3; // Slightly larger target size
+                const scale = targetSize / maxDim; 
                 currentModel.scale.set(scale, scale, scale);
+
+                // 3. Move Camera to a nice viewing distance
+                // The camera is at (2,2,4) by default. We adjust it based on size.
+                // Reset controls to ensure target is (0,0,0)
+                controls.reset(); 
+                
+                // Optional: Adjust camera distance if needed, but scaling usually solves it.
+                // camera.position.z = maxDim * scale * 2; 
 
                 scene.add(currentModel);
                 
                 if(loadingText) loadingText.style.display = 'none';
-                controls.reset();
             },
             (xhr) => {
                 // Progress
