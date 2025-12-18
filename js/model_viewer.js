@@ -1,6 +1,6 @@
 /**
  * [MODULE: 3D MODEL VIEWER]
- * Reverted to stable scaling/centering logic.
+ * Updated with robust error reporting.
  */
 
 const modelViewer = (function() {
@@ -24,7 +24,7 @@ const modelViewer = (function() {
         // 2. Camera
         const aspect = container.clientWidth / container.clientHeight;
         camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1000);
-        camera.position.set(2, 2, 5); // Standard ISO view
+        camera.position.set(2, 2, 4); 
 
         // 3. Renderer
         renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -53,7 +53,7 @@ const modelViewer = (function() {
 
         // 6. Grid Helper
         const gridHelper = new THREE.GridHelper(20, 20, 0x00f2ff, 0x2d5b6e);
-        gridHelper.position.y = -2; 
+        gridHelper.position.y = -0.5; 
         gridHelper.material.opacity = 0.2;
         gridHelper.material.transparent = true;
         scene.add(gridHelper);
@@ -107,39 +107,45 @@ const modelViewer = (function() {
             (gltf) => {
                 currentModel = gltf.scene;
                 
-                // --- STABLE CENTER & SCALE LOGIC ---
-                // This ensures the model is visually centered at 0,0,0
-                // regardless of where it was placed in the CAD software.
-                
+                // Auto-center and scale
                 const box = new THREE.Box3().setFromObject(currentModel);
                 const size = box.getSize(new THREE.Vector3());
-                const center = box.getCenter(new THREE.Vector3());
-
-                // 1. Shift the model so its geometric center is at (0,0,0)
-                currentModel.position.x -= center.x;
-                currentModel.position.y -= center.y;
-                currentModel.position.z -= center.z;
                 
-                // 2. Scale it to a consistent size (e.g., 4 units)
+                // Center
+                const center = box.getCenter(new THREE.Vector3());
+                currentModel.position.x += (currentModel.position.x - center.x);
+                currentModel.position.y += (currentModel.position.y - center.y);
+                currentModel.position.z += (currentModel.position.z - center.z);
+                
+                // Scale
                 const maxDim = Math.max(size.x, size.y, size.z);
-                if (maxDim > 0) {
-                    const targetSize = 4; 
-                    const scale = targetSize / maxDim; 
-                    currentModel.scale.set(scale, scale, scale);
-                }
+                const scale = 2 / maxDim; 
+                currentModel.scale.set(scale, scale, scale);
 
                 scene.add(currentModel);
-                controls.reset();
                 
                 if(loadingText) loadingText.style.display = 'none';
+                controls.reset();
             },
             (xhr) => {
+                // Progress
                 if(loadingText) loadingText.innerText = Math.round(xhr.loaded / xhr.total * 100) + '%';
             },
             (error) => {
-                console.error('Model Error:', error);
+                console.error('Detailed Model Error:', error);
+                
+                let errorMsg = "ERROR LOADING MODEL";
+                
+                // Try to detect the type of error for the user
+                if(error.target && error.target.status) {
+                    if(error.target.status === 404) errorMsg = "FILE NOT FOUND (404)";
+                    else errorMsg = `HTTP ERROR ${error.target.status}`;
+                } else if(error instanceof SyntaxError) {
+                    errorMsg = "FILE CORRUPTED (GIT LFS/TEXT ISSUE)";
+                }
+
                 if(loadingText) {
-                    loadingText.innerText = "ERROR LOADING MODEL";
+                    loadingText.innerText = errorMsg;
                     loadingText.style.color = "#ff4757";
                 }
             }
