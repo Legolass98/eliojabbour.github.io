@@ -1,6 +1,6 @@
 /**
  * [MODULE: PROJECT DATA]
- * Updated with the specific path for the Alyssa GLB model.
+ * Updated: Enabled 3D Model for Hades (Snake Robot).
  */
 
 const projectDatabase = {
@@ -30,8 +30,7 @@ const projectDatabase = {
         has3DModel: false
     },
 
-    // 2. Hades (Underwater Robot)
-    // 2. Hades (Underwater Robot)
+    // 2. Hades (Underwater Robot) - UPDATED FOR 3D
     'hades': {
         title: "Hades: Bio-Inspired ROV",
         subtitle: "14-DOF Eel-Robot for Karst Exploration",
@@ -50,16 +49,12 @@ const projectDatabase = {
             "<strong>Redundancy Analysis:</strong> Analyzed 6-DOF actuation capabilities across various body shapes to ensure fault tolerance."
         ],
         hasSimulation: false,
-        
-        // --- UPDATED SECTION START ---
+        // --- 3D MODEL ENABLED ---
         has3DModel: true, 
-        // ⚠️ IMPORTANT: Ensure your GLB file is named "Hades.glb" and is in this folder, 
-        // or update this path to match your actual file name.
-        modelPath: "img/profilepicture/hadesglb.glb" 
-        // --- UPDATED SECTION END ---
+        modelPath: "img/profilepicture/hadesglb.glb"
     },
 
-    // 3. Alyssa (Marine ROV) - UPDATED PATH
+    // 3. Alyssa (Marine ROV)
     'alyssa': {
         title: "Project ALYSSA",
         subtitle: "5-DOF Inspection Class ROV",
@@ -77,7 +72,6 @@ const projectDatabase = {
         ],
         hasSimulation: false,
         has3DModel: true,
-        // PATH UPDATED: Converted backslashes to forward slashes for web compatibility
         modelPath: "img/profilepicture/Alyssaglb1.glb"
     },
 
