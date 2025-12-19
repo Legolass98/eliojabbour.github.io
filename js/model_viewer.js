@@ -101,6 +101,8 @@ const modelViewer = (function() {
             currentModel = null;
         }
 
+        console.log("Attempting to load model from:", path);
+
         // Load new model
         loader.load(
             path,
@@ -117,9 +119,9 @@ const modelViewer = (function() {
                 currentModel.position.y += (currentModel.position.y - center.y);
                 currentModel.position.z += (currentModel.position.z - center.z);
                 
-                // Scale
+                // Scale (Fit into a 2x2x2 box approx)
                 const maxDim = Math.max(size.x, size.y, size.z);
-                const scale = 2 / maxDim; 
+                const scale = 2.5 / maxDim; 
                 currentModel.scale.set(scale, scale, scale);
 
                 scene.add(currentModel);
@@ -145,7 +147,7 @@ const modelViewer = (function() {
                 }
 
                 if(loadingText) {
-                    loadingText.innerText = errorMsg;
+                    loadingText.innerText = errorMsg + "\nCheck Console for Path";
                     loadingText.style.color = "#ff4757";
                 }
             }

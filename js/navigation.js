@@ -72,6 +72,10 @@ const appNav = {
 
         // F. Handle 3D Model Viewer (NEW)
         const modelView = document.getElementById('project-3d-view');
+        
+        // Hide by default to clear previous state
+        modelView.style.display = 'none'; 
+
         if(data.has3DModel && typeof modelViewer !== 'undefined') {
             modelView.style.display = 'block';
             // Trigger Load
@@ -79,8 +83,6 @@ const appNav = {
                 modelViewer.resize();
                 modelViewer.load(data.modelPath);
             }, 100);
-        } else {
-            modelView.style.display = 'none';
         }
     },
 

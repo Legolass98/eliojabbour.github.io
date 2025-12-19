@@ -1,6 +1,6 @@
 /**
  * [MODULE: PROJECT DATA]
- * Updated: Enabled 3D Model for Hades (Snake Robot).
+ * Updated: Fixed file path syntax for Hades (Backslash \ to Forward Slash /).
  */
 
 const projectDatabase = {
@@ -30,7 +30,7 @@ const projectDatabase = {
         has3DModel: false
     },
 
-    // 2. Hades (Underwater Robot) - UPDATED FOR 3D
+    // 2. Hades (Underwater Robot) - FIXED PATH
     'hades': {
         title: "Hades: Bio-Inspired ROV",
         subtitle: "14-DOF Eel-Robot for Karst Exploration",
@@ -51,6 +51,7 @@ const projectDatabase = {
         hasSimulation: false,
         // --- 3D MODEL ENABLED ---
         has3DModel: true, 
+        // FIX: Changed "img\profilepicture\hadesglb.glb" to "/"
         modelPath: "img/profilepicture/hadesglb.glb"
     },
 
