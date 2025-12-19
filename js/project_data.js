@@ -71,7 +71,7 @@ const projectDatabase = {
         hasSimulation: false,
         has3DModel: true,
         // PATH UPDATED: Converted backslashes to forward slashes for web compatibility
-        modelPath: "img/profilepicture/Alyssaglb.glb"
+        modelPath: "img/profilepicture/Alyssaglb1.glb"
     },
 
     // 4. Haptics (Internship)
