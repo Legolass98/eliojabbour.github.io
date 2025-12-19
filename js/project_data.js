@@ -31,6 +31,7 @@ const projectDatabase = {
     },
 
     // 2. Hades (Underwater Robot)
+    // 2. Hades (Underwater Robot)
     'hades': {
         title: "Hades: Bio-Inspired ROV",
         subtitle: "14-DOF Eel-Robot for Karst Exploration",
@@ -49,7 +50,13 @@ const projectDatabase = {
             "<strong>Redundancy Analysis:</strong> Analyzed 6-DOF actuation capabilities across various body shapes to ensure fault tolerance."
         ],
         hasSimulation: false,
-        has3DModel: false
+        
+        // --- UPDATED SECTION START ---
+        has3DModel: true, 
+        // ⚠️ IMPORTANT: Ensure your GLB file is named "Hades.glb" and is in this folder, 
+        // or update this path to match your actual file name.
+        modelPath: "img/profilepicture/hadesglb.glb" 
+        // --- UPDATED SECTION END ---
     },
 
     // 3. Alyssa (Marine ROV) - UPDATED PATH
